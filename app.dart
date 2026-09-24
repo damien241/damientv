@@ -19,7 +19,6 @@ class C {
   static const accent = Color(0xFFE50914);
   static const gold = Color(0xFFFBBF24);
   static const muted = Color(0xFF8B96B8);
-  static const green = Color(0xFF22C55E);
 }
 
 class Flag extends StatelessWidget {
@@ -80,7 +79,6 @@ class Series {
 
 /* ===== FILMS ===== */
 final List<Movie> library = [
-  // GOOGLE
   Movie(title: 'Big Buck Bunny', description: 'Un gros lapin gentil se venge de trois rongeurs.',
     poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
@@ -93,7 +91,7 @@ final List<Movie> library = [
     poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
     genre: 'Animation', language: 'FR', year: 2006, rating: 4.3),
-  Movie(title: 'Tears of Steel', description: 'Science-fiction mêlant acteurs et effets spéciaux.',
+  Movie(title: 'Tears of Steel', description: 'Science-fiction avec effets spéciaux.',
     poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
     genre: 'Science-Fiction', language: 'VO', year: 2012, rating: 4.5),
@@ -125,7 +123,7 @@ final List<Movie> library = [
     poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/VolkswagenGTIReview.jpg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4',
     genre: 'Documentaire', language: 'VO', year: 2015, rating: 4.2),
-  Movie(title: 'Bullrun Rally', description: 'Reportage course automobile.',
+  Movie(title: 'Bullrun Rally', description: 'Reportage course auto.',
     poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/WeAreGoingOnBullrun.jpg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
     genre: 'Documentaire', language: 'VO', year: 2015, rating: 4.2),
@@ -133,12 +131,11 @@ final List<Movie> library = [
     poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/WhatCarCanYouGetForAGrand.jpg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4',
     genre: 'Documentaire', language: 'VO', year: 2015, rating: 4.2),
-  // FILMS CLASSIQUES (Archive.org)
-  Movie(title: 'Nosferatu', description: 'Le vampire de Murnau (1922). Chef-d\'œuvre expressionniste.',
+  Movie(title: 'Nosferatu', description: 'Le vampire de Murnau (1922).',
     poster: 'https://archive.org/services/img/nosferatu',
     videoUrl: 'https://archive.org/download/nosferatu/nosferatu_512kb.mp4',
     genre: 'Horreur', language: 'VO', year: 1922, rating: 4.9, featured: true),
-  Movie(title: 'Metropolis', description: 'Le classique visionnaire de Fritz Lang (1927).',
+  Movie(title: 'Metropolis', description: 'Le classique de Fritz Lang (1927).',
     poster: 'https://archive.org/services/img/Metropolis1927',
     videoUrl: 'https://archive.org/download/Metropolis1927/Metropolis1927_512kb.mp4',
     genre: 'Science-Fiction', language: 'VO', year: 1927, rating: 4.9),
@@ -146,114 +143,57 @@ final List<Movie> library = [
     poster: 'https://archive.org/services/img/night_of_the_living_dead',
     videoUrl: 'https://archive.org/download/night_of_the_living_dead/night_of_the_living_dead_512kb.mp4',
     genre: 'Horreur', language: 'VO', year: 1968, rating: 4.7),
-  Movie(title: 'The Cabinet of Dr. Caligari', description: 'Chef-d\'œuvre expressionniste (1920).',
+  Movie(title: 'The Cabinet of Dr. Caligari', description: 'Expressionniste (1920).',
     poster: 'https://archive.org/services/img/TheCabinetOfDrCaligari',
     videoUrl: 'https://archive.org/download/TheCabinetOfDrCaligari/TheCabinetOfDrCaligari_512kb.mp4',
     genre: 'Horreur', language: 'VO', year: 1920, rating: 4.8),
-  Movie(title: 'The General', description: 'Comédie burlesque de Buster Keaton (1926).',
+  Movie(title: 'The General', description: 'Buster Keaton (1926).',
     poster: 'https://archive.org/services/img/TheGeneral_201208',
     videoUrl: 'https://archive.org/download/TheGeneral_201208/TheGeneral_201208_512kb.mp4',
     genre: 'Comédie', language: 'VO', year: 1926, rating: 4.8),
-  Movie(title: 'Plan 9 from Outer Space', description: 'Le film culte d\'Ed Wood (1959).',
+  Movie(title: 'Plan 9 from Outer Space', description: 'Ed Wood (1959).',
     poster: 'https://archive.org/services/img/Plan_9_from_Outer_Space_1959',
     videoUrl: 'https://archive.org/download/Plan_9_from_Outer_Space_1959/Plan_9_from_Outer_Space_1959_512kb.mp4',
     genre: 'Science-Fiction', language: 'VO', year: 1959, rating: 4.0),
-  Movie(title: 'His Girl Friday', description: 'Comédie avec Cary Grant (1940).',
-    poster: 'https://archive.org/services/img/his_girl_friday',
-    videoUrl: 'https://archive.org/download/his_girl_friday/his_girl_friday_512kb.mp4',
-    genre: 'Comédie', language: 'VO', year: 1940, rating: 4.7),
-  Movie(title: 'Charade', description: 'Thriller avec Audrey Hepburn (1963).',
+  Movie(title: 'Charade', description: 'Audrey Hepburn (1963).',
     poster: 'https://archive.org/services/img/charade_1963',
     videoUrl: 'https://archive.org/download/charade_1963/charade_1963_512kb.mp4',
     genre: 'Thriller', language: 'VO', year: 1963, rating: 4.6),
-  Movie(title: 'Carnival of Souls', description: 'Film d\'horreur culte (1962).',
-    poster: 'https://archive.org/services/img/CarnivalOfSouls',
-    videoUrl: 'https://archive.org/download/CarnivalOfSouls/CarnivalOfSouls_512kb.mp4',
-    genre: 'Horreur', language: 'VO', year: 1962, rating: 4.5),
-  Movie(title: 'D.O.A.', description: 'Film noir classique (1950).',
-    poster: 'https://archive.org/services/img/DOA_1949',
-    videoUrl: 'https://archive.org/download/DOA_1949/DOA_1949_512kb.mp4',
-    genre: 'Thriller', language: 'VO', year: 1950, rating: 4.5),
-  Movie(title: 'The Little Shop of Horrors', description: 'Comédie noire culte (1960).',
-    poster: 'https://archive.org/services/img/little_shop_of_horrors',
-    videoUrl: 'https://archive.org/download/little_shop_of_horrors/little_shop_of_horrors_512kb.mp4',
-    genre: 'Comédie', language: 'VO', year: 1960, rating: 4.4),
-  Movie(title: 'Beat the Devil', description: 'Aventure avec Humphrey Bogart (1953).',
-    poster: 'https://archive.org/services/img/BeatTheDevil',
-    videoUrl: 'https://archive.org/download/BeatTheDevil/BeatTheDevil_512kb.mp4',
-    genre: 'Aventure', language: 'VO', year: 1953, rating: 4.4),
-  Movie(title: 'The Last Man on Earth', description: 'Science-fiction avec Vincent Price (1964).',
-    poster: 'https://archive.org/services/img/TheLastManOnEarth',
-    videoUrl: 'https://archive.org/download/TheLastManOnEarth/TheLastManOnEarth_512kb.mp4',
-    genre: 'Science-Fiction', language: 'VO', year: 1964, rating: 4.5),
-  // FILMS FRANÇAIS
-  Movie(title: 'Le Voyage dans la Lune', description: 'Chef-d\'œuvre de Georges Méliès (1902).',
+  Movie(title: 'Le Voyage dans la Lune', description: 'Méliès (1902).',
     poster: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/Le_Voyage_dans_la_Lune.jpg',
     videoUrl: 'https://archive.org/download/Le_Voyage_dans_la_Lune_1902/Le_Voyage_dans_la_Lune_1902_512kb.mp4',
     genre: 'Aventure', language: 'FR', year: 1902, rating: 4.9),
-  Movie(title: 'Fantômas', description: 'Série policière de Louis Feuillade (1913).',
+  Movie(title: 'Fantômas', description: 'Louis Feuillade (1913).',
     poster: 'https://archive.org/services/img/Fantomas_1913',
     videoUrl: 'https://archive.org/download/Fantomas_1913/Fantomas_1913_512kb.mp4',
     genre: 'Policier', language: 'FR', year: 1913, rating: 4.6),
-  Movie(title: 'Les Vampires', description: 'Serial policier de Feuillade (1915).',
-    poster: 'https://archive.org/services/img/LesVampires',
-    videoUrl: 'https://archive.org/download/LesVampires/LesVampires_512kb.mp4',
-    genre: 'Policier', language: 'FR', year: 1915, rating: 4.7),
-  Movie(title: 'Napoléon', description: 'Chef-d\'œuvre d\'Abel Gance (1927).',
-    poster: 'https://archive.org/services/img/Napoleon1927',
-    videoUrl: 'https://archive.org/download/Napoleon1927/Napoleon1927_512kb.mp4',
-    genre: 'Historique', language: 'FR', year: 1927, rating: 4.9),
 ];
 
 /* ===== DESSINS ANIMÉS ===== */
 final List<Movie> cartoons = [
-  Movie(title: 'Big Buck Bunny', description: 'Le célèbre court-métrage 3D. Un lapin gentil se venge.',
+  Movie(title: 'Big Buck Bunny', description: 'Le célèbre court-métrage 3D.',
     poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    genre: 'Animation', language: 'FR', year: 2008, rating: 4.8, featured: true),
+    genre: 'Dessin animé', language: 'FR', year: 2008, rating: 4.8),
   Movie(title: 'Sintel', description: 'Une quête fantastique.',
     poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-    genre: 'Animation', language: 'FR', year: 2010, rating: 4.9),
+    genre: 'Dessin animé', language: 'FR', year: 2010, rating: 4.9),
   Movie(title: 'Elephants Dream', description: 'Surréaliste et poétique.',
     poster: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-    genre: 'Animation', language: 'FR', year: 2006, rating: 4.3),
-  Movie(title: 'Popeye - Cartoons', description: 'Les aventures de Popeye en dessins animés classiques.',
-    poster: 'https://archive.org/services/img/Popeye_Cartoons',
-    videoUrl: 'https://archive.org/download/Popeye_Cartoons/Popeye_Cartoons_512kb.mp4',
-    genre: 'Dessin animé', language: 'VO', year: 1940, rating: 4.5),
-  Movie(title: 'Superman - Fleischer', description: 'Les cartoons Superman des studios Fleischer (1941).',
+    genre: 'Dessin animé', language: 'FR', year: 2006, rating: 4.3),
+  Movie(title: 'Superman - Fleischer', description: 'Cartoons Superman (1941).',
     poster: 'https://archive.org/services/img/superman_cartoons',
     videoUrl: 'https://archive.org/download/superman_cartoons/superman_cartoons_512kb.mp4',
     genre: 'Dessin animé', language: 'VO', year: 1941, rating: 4.6),
-  Movie(title: 'Betty Boop', description: 'Dessins animés cultes des années 1930.',
-    poster: 'https://archive.org/services/img/BettyBoop',
-    videoUrl: 'https://archive.org/download/BettyBoop/BettyBoop_512kb.mp4',
-    genre: 'Dessin animé', language: 'VO', year: 1933, rating: 4.5),
-  Movie(title: 'Felix the Cat', description: 'Le célèbre chat noir des années 1920.',
-    poster: 'https://archive.org/services/img/FelixTheCat',
-    videoUrl: 'https://archive.org/download/FelixTheCat/FelixTheCat_512kb.mp4',
-    genre: 'Dessin animé', language: 'VO', year: 1920, rating: 4.4),
-  Movie(title: 'Gerald McBoing Boing', description: 'Cartoon oscarisé de la MGM.',
-    poster: 'https://archive.org/services/img/GeraldMcBoingBoing',
-    videoUrl: 'https://archive.org/download/GeraldMcBoingBoing/GeraldMcBoingBoing_512kb.mp4',
-    genre: 'Dessin animé', language: 'VO', year: 1950, rating: 4.7),
-  Movie(title: 'Gulliver\'s Travels', description: 'Le classique de 1939.',
-    poster: 'https://archive.org/services/img/GulliversTravels1939',
-    videoUrl: 'https://archive.org/download/GulliversTravels1939/GulliversTravels1939_512kb.mp4',
-    genre: 'Dessin animé', language: 'VO', year: 1939, rating: 4.6),
-  Movie(title: 'Alice in Wonderland', description: 'Dessin animé d\'Alice au Pays des Merveilles (1951).',
-    poster: 'https://archive.org/services/img/AliceInWonderland1951',
-    videoUrl: 'https://archive.org/download/AliceInWonderland1951/AliceInWonderland1951_512kb.mp4',
-    genre: 'Dessin animé', language: 'VO', year: 1951, rating: 4.5),
 ];
 
 /* ===== SÉRIES ===== */
 final List<Series> seriesLibrary = [
   Series(
     title: 'Les Vampires',
-    description: 'Serial policier français culte de Louis Feuillade (1915). 10 épisodes.',
+    description: 'Serial policier culte de Louis Feuillade (1915).',
     poster: 'https://archive.org/services/img/LesVampires',
     genre: 'Policier', language: 'FR', year: 1915, rating: 4.7,
     episodes: [
@@ -262,59 +202,36 @@ final List<Series> seriesLibrary = [
       Episode(number: 3, title: 'Le Cryptogramme rouge', videoUrl: 'https://archive.org/download/LesVampires/LesVampires_03_512kb.mp4'),
       Episode(number: 4, title: 'Le Spectre', videoUrl: 'https://archive.org/download/LesVampires/LesVampires_04_512kb.mp4'),
       Episode(number: 5, title: 'L\'Évasion du mort', videoUrl: 'https://archive.org/download/LesVampires/LesVampires_05_512kb.mp4'),
-      Episode(number: 6, title: 'Les Yeux qui fascinent', videoUrl: 'https://archive.org/download/LesVampires/LesVampires_06_512kb.mp4'),
-      Episode(number: 7, title: 'Satanas', videoUrl: 'https://archive.org/download/LesVampires/LesVampires_07_512kb.mp4'),
-      Episode(number: 8, title: 'Le Maître de la foudre', videoUrl: 'https://archive.org/download/LesVampires/LesVampires_08_512kb.mp4'),
-      Episode(number: 9, title: 'L\'Homme des poisons', videoUrl: 'https://archive.org/download/LesVampires/LesVampires_09_512kb.mp4'),
-      Episode(number: 10, title: 'Les Noces sanglantes', videoUrl: 'https://archive.org/download/LesVampires/LesVampires_10_512kb.mp4'),
     ]),
   Series(
     title: 'Fantômas',
-    description: 'Série policière culte de Louis Feuillade (1913). 5 épisodes.',
+    description: 'Série policière culte (1913).',
     poster: 'https://archive.org/services/img/Fantomas_1913',
     genre: 'Policier', language: 'FR', year: 1913, rating: 4.6,
     episodes: [
       Episode(number: 1, title: 'Fantômas', videoUrl: 'https://archive.org/download/Fantomas_1913/Fantomas_1913_01_512kb.mp4'),
       Episode(number: 2, title: 'Juve contre Fantômas', videoUrl: 'https://archive.org/download/Fantomas_1913/Fantomas_1913_02_512kb.mp4'),
       Episode(number: 3, title: 'Le Mort qui tue', videoUrl: 'https://archive.org/download/Fantomas_1913/Fantomas_1913_03_512kb.mp4'),
-      Episode(number: 4, title: 'Fantômas contre Fantômas', videoUrl: 'https://archive.org/download/Fantomas_1913/Fantomas_1913_04_512kb.mp4'),
-      Episode(number: 5, title: 'Le Faux Magistrat', videoUrl: 'https://archive.org/download/Fantomas_1913/Fantomas_1913_05_512kb.mp4'),
-    ]),
-  Series(
-    title: 'The Perils of Pauline',
-    description: 'Serial d\'aventure culte (1914). 5 épisodes.',
-    poster: 'https://archive.org/services/img/perils_of_pauline',
-    genre: 'Aventure', language: 'VO', year: 1914, rating: 4.4,
-    episodes: [
-      Episode(number: 1, title: 'Épisode 1', videoUrl: 'https://archive.org/download/perils_of_pauline/perils_of_pauline_01_512kb.mp4'),
-      Episode(number: 2, title: 'Épisode 2', videoUrl: 'https://archive.org/download/perils_of_pauline/perils_of_pauline_02_512kb.mp4'),
-      Episode(number: 3, title: 'Épisode 3', videoUrl: 'https://archive.org/download/perils_of_pauline/perils_of_pauline_03_512kb.mp4'),
-      Episode(number: 4, title: 'Épisode 4', videoUrl: 'https://archive.org/download/perils_of_pauline/perils_of_pauline_04_512kb.mp4'),
-      Episode(number: 5, title: 'Épisode 5', videoUrl: 'https://archive.org/download/perils_of_pauline/perils_of_pauline_05_512kb.mp4'),
     ]),
   Series(
     title: 'Flash Gordon',
-    description: 'Serial de science-fiction culte (1936). 5 épisodes.',
+    description: 'Serial de science-fiction culte (1936).',
     poster: 'https://archive.org/services/img/FlashGordonSerial',
     genre: 'Science-Fiction', language: 'VO', year: 1936, rating: 4.5,
     episodes: [
       Episode(number: 1, title: 'Planet in Peril', videoUrl: 'https://archive.org/download/FlashGordonSerial/FlashGordon_01_512kb.mp4'),
       Episode(number: 2, title: 'Tunnel of Terror', videoUrl: 'https://archive.org/download/FlashGordonSerial/FlashGordon_02_512kb.mp4'),
       Episode(number: 3, title: 'Shark Men', videoUrl: 'https://archive.org/download/FlashGordonSerial/FlashGordon_03_512kb.mp4'),
-      Episode(number: 4, title: 'Sea Beast', videoUrl: 'https://archive.org/download/FlashGordonSerial/FlashGordon_04_512kb.mp4'),
-      Episode(number: 5, title: 'Destroying Ray', videoUrl: 'https://archive.org/download/FlashGordonSerial/FlashGordon_05_512kb.mp4'),
     ]),
   Series(
     title: 'Batman (1943)',
-    description: 'Le tout premier serial Batman. 5 épisodes.',
+    description: 'Le tout premier serial Batman.',
     poster: 'https://archive.org/services/img/Batman1943Serial',
     genre: 'Aventure', language: 'VO', year: 1943, rating: 4.3,
     episodes: [
       Episode(number: 1, title: 'The Electrical Brain', videoUrl: 'https://archive.org/download/Batman1943Serial/Batman_01_512kb.mp4'),
       Episode(number: 2, title: 'The Bat\'s Cave', videoUrl: 'https://archive.org/download/Batman1943Serial/Batman_02_512kb.mp4'),
       Episode(number: 3, title: 'Mark of the Zombies', videoUrl: 'https://archive.org/download/Batman1943Serial/Batman_03_512kb.mp4'),
-      Episode(number: 4, title: 'Slaves of the Rising Sun', videoUrl: 'https://archive.org/download/Batman1943Serial/Batman_04_512kb.mp4'),
-      Episode(number: 5, title: 'The Living Ghost', videoUrl: 'https://archive.org/download/Batman1943Serial/Batman_05_512kb.mp4'),
     ]),
 ];
 
@@ -364,30 +281,28 @@ class Storage {
   }
 }
 
-/* ===== VLC LAUNCHER ===== */
+/* ===== VLC ===== */
 Future<void> openInVlc(String url) async {
   try {
-    // 1. Intent Android spécifique à VLC
     final intentUrl = 'intent://${url.replaceFirst(RegExp(r'^https?://'), '')}'
         '#Intent;scheme=${url.startsWith('https') ? 'https' : 'http'};'
         'package=org.videolan.vlc;type=video/*;end';
-    final uri1 = Uri.parse(intentUrl);
-    if (await canLaunchUrl(uri1)) {
-      await launchUrl(uri1, mode: LaunchMode.externalApplication);
+    final u = Uri.parse(intentUrl);
+    if (await canLaunchUrl(u)) {
+      await launchUrl(u, mode: LaunchMode.externalApplication);
       return;
     }
   } catch (_) {}
   try {
-    // 2. Scheme vlc://
-    final uri2 = Uri.parse('vlc://$url');
-    if (await canLaunchUrl(uri2)) {
-      await launchUrl(uri2, mode: LaunchMode.externalApplication);
+    final u = Uri.parse('vlc://$url');
+    if (await canLaunchUrl(u)) {
+      await launchUrl(u, mode: LaunchMode.externalApplication);
       return;
     }
   } catch (_) {}
-  // 3. Fallback : ouvrir avec navigateur
-  final uri3 = Uri.parse(url);
-  await launchUrl(uri3, mode: LaunchMode.externalApplication);
+  try {
+    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  } catch (_) {}
 }
 
 /* ===== APP ===== */
@@ -415,11 +330,7 @@ class _RootScreenState extends State<RootScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: IndexedStack(index: _idx, children: const [
-      HomeScreen(),
-      CartoonScreen(),
-      SeriesScreen(),
-      M3UScreen(),
-      DirectScreen(),
+      HomeScreen(), CartoonScreen(), SeriesScreen(), M3UScreen(), DirectScreen(),
     ]),
     bottomNavigationBar: BottomNavigationBar(
       currentIndex: _idx,
@@ -460,9 +371,8 @@ class AppHeader extends StatelessWidget {
       const SizedBox(width: 10),
       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          const Text('Damien TV 241',
-            style: TextStyle(color: Colors.white, fontSize: 15,
-              fontWeight: FontWeight.bold)),
+          const Text('Damien TV 241', style: TextStyle(color: Colors.white,
+            fontSize: 15, fontWeight: FontWeight.bold)),
           const SizedBox(width: 6), const Flag(w: 18, h: 11),
         ]),
         Text(subtitle, style: const TextStyle(color: C.gold, fontSize: 9,
@@ -485,12 +395,11 @@ class CreditBar extends StatelessWidget {
     ]));
 }
 
-/* ===== CARTE FILM (réutilisable) ===== */
+/* ===== CARTE FILM ===== */
 Widget movieCard(BuildContext context, Movie m) => GestureDetector(
   onTap: () => Navigator.push(context, MaterialPageRoute(
     builder: (_) => PlayerScreen(title: m.title, url: m.videoUrl))),
-  child: Container(width: 130,
-    margin: const EdgeInsets.symmetric(horizontal: 4),
+  child: Container(width: 130, margin: const EdgeInsets.symmetric(horizontal: 4),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       ClipRRect(borderRadius: BorderRadius.circular(8),
         child: CachedNetworkImage(imageUrl: m.poster,
@@ -501,8 +410,7 @@ Widget movieCard(BuildContext context, Movie m) => GestureDetector(
             color: C.card, child: const Icon(Icons.movie, color: C.muted)))),
       const SizedBox(height: 6),
       Text(m.title, maxLines: 1, overflow: TextOverflow.ellipsis,
-        style: const TextStyle(color: Colors.white, fontSize: 12,
-          fontWeight: FontWeight.w600)),
+        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
       Text('${m.language} • ⭐ ${m.rating}',
         style: const TextStyle(color: C.muted, fontSize: 10)),
     ])));
@@ -521,7 +429,7 @@ Widget movieSection(String title, List<Movie> movies) {
   ]);
 }
 
-/* ===== ACCUEIL FILMS ===== */
+/* ===== ACCUEIL ===== */
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   @override
@@ -548,7 +456,18 @@ class _HomeScreenState extends State<HomeScreen> {
           _chip('FR', '🇫🇷 FR'), const SizedBox(width: 6),
           _chip('VO', '🌐 VO'),
         ])),
-      Expanded(child: _list()),
+      Expanded(child: ListView(children: [
+        movieSection('⭐ Tendances', _f.take(10).toList()),
+        movieSection('🎬 Films Français', _f.where((m) => m.language == 'FR').toList()),
+        movieSection('🚀 Science-Fiction', byG('Science-Fiction')),
+        movieSection('👻 Horreur', byG('Horreur')),
+        movieSection('😂 Comédie', byG('Comédie')),
+        movieSection('💥 Action', byG('Action')),
+        movieSection('🕵️ Policier', byG('Policier')),
+        movieSection('📚 Documentaires', byG('Documentaire')),
+        const SizedBox(height: 20),
+        const CreditBar(),
+      ])),
     ]),
   );
 
@@ -564,22 +483,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Text(label, style: TextStyle(color: a ? Colors.white : C.muted,
           fontSize: 11, fontWeight: FontWeight.w600))));
   }
-
-  Widget _list() => ListView(children: [
-    movieSection('⭐ Tendances', _f.take(10).toList()),
-    movieSection('🎬 Films Français', _f.where((m) => m.language == 'FR').toList()),
-    movieSection('🚀 Science-Fiction', byG('Science-Fiction')),
-    movieSection('👻 Horreur', byG('Horreur')),
-    movieSection('😂 Comédie', byG('Comédie')),
-    movieSection('💥 Action', byG('Action')),
-    movieSection('🕵️ Policier', byG('Policier')),
-    movieSection('📚 Documentaires', byG('Documentaire')),
-    const SizedBox(height: 20),
-    const CreditBar(),
-  ]);
 }
 
-/* ===== DESSINS ANIMÉS ===== */
+/* ===== DESSINS ===== */
 class CartoonScreen extends StatelessWidget {
   const CartoonScreen({super.key});
   @override
@@ -684,8 +590,7 @@ class SeriesDetailScreen extends StatelessWidget {
           child: Center(child: Text('${ep.number}',
             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
         title: Text(ep.title, style: const TextStyle(color: Colors.white, fontSize: 13)),
-        subtitle: Text('Épisode ${ep.number}',
-          style: const TextStyle(color: C.muted, fontSize: 11)),
+        subtitle: Text('Épisode ${ep.number}', style: const TextStyle(color: C.muted, fontSize: 11)),
         onTap: () => Navigator.push(context, MaterialPageRoute(
           builder: (_) => PlayerScreen(title: '${series.title} - ${ep.title}',
             url: ep.videoUrl))),
@@ -696,7 +601,7 @@ class SeriesDetailScreen extends StatelessWidget {
   );
 }
 
-/* ===== M3U avec GROUPES PAR CATÉGORIES + TÉLÉCOMMANDE ===== */
+/* ===== M3U ===== */
 class M3UScreen extends StatefulWidget {
   const M3UScreen({super.key});
   @override
@@ -752,24 +657,24 @@ class _M3UScreenState extends State<M3UScreen> {
       SnackBar(content: Text(m), backgroundColor: C.card));
   }
 
-  List<String> get _categories {
+  List<String> get _cats {
     final s = <String>{};
     for (final c in _all) s.add(c.group);
     return ['TOUTES', ...s.toList()..sort()];
   }
 
-  List<Channel> get _visible {
-    var list = _all;
-    if (_category != 'TOUTES') list = list.where((c) => c.group == _category).toList();
-    if (_search.isNotEmpty) list = list.where((c) =>
+  List<Channel> get _vis {
+    var l = _all;
+    if (_category != 'TOUTES') l = l.where((c) => c.group == _category).toList();
+    if (_search.isNotEmpty) l = l.where((c) =>
       c.name.toLowerCase().contains(_search) ||
       c.group.toLowerCase().contains(_search)).toList();
-    return list;
+    return l;
   }
 
   Map<String, List<Channel>> get _grouped {
     final m = <String, List<Channel>>{};
-    for (final c in _visible) m.putIfAbsent(c.group, () => []).add(c);
+    for (final c in _vis) m.putIfAbsent(c.group, () => []).add(c);
     return m;
   }
 
@@ -793,8 +698,7 @@ class _M3UScreenState extends State<M3UScreen> {
         child: TextField(controller: _searchCtrl,
           style: const TextStyle(color: Colors.white, fontSize: 12),
           decoration: InputDecoration(
-            hintText: 'Rechercher une chaîne...',
-            hintStyle: const TextStyle(color: C.muted),
+            hintText: 'Rechercher...', hintStyle: const TextStyle(color: C.muted),
             prefixIcon: const Icon(Icons.search, color: C.muted, size: 18),
             filled: true, fillColor: const Color(0xFF0D1220),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -803,9 +707,9 @@ class _M3UScreenState extends State<M3UScreen> {
       if (_all.isNotEmpty) SizedBox(height: 36,
         child: ListView.builder(scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          itemCount: _categories.length,
+          itemCount: _cats.length,
           itemBuilder: (_, i) {
-            final cat = _categories[i];
+            final cat = _cats[i];
             final a = _category == cat;
             return Padding(padding: const EdgeInsets.symmetric(horizontal: 3),
               child: InkWell(onTap: () => setState(() => _category = cat),
@@ -834,7 +738,7 @@ class _M3UScreenState extends State<M3UScreen> {
       borderSide: const BorderSide(color: Color(0xFF232B42))));
 
   Widget _list() {
-    if (_visible.isEmpty) return Center(child: Text(
+    if (_vis.isEmpty) return Center(child: Text(
       _all.isEmpty ? 'Charge une playlist' : 'Aucun résultat',
       style: const TextStyle(color: C.muted)));
     return ListView(children: _grouped.entries.expand((e) => [
@@ -844,12 +748,10 @@ class _M3UScreenState extends State<M3UScreen> {
             fontWeight: FontWeight.bold, letterSpacing: 1.2))),
       ...e.value.map((c) => ListTile(
         dense: true,
-        leading: c.logo.isEmpty
-          ? _fb()
+        leading: c.logo.isEmpty ? _fb()
           : ClipRRect(borderRadius: BorderRadius.circular(6),
               child: Image.network(c.logo, width: 36, height: 36,
-                fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => _fb())),
+                fit: BoxFit.contain, errorBuilder: (_, __, ___) => _fb())),
         title: Text(c.name, maxLines: 1, overflow: TextOverflow.ellipsis,
           style: const TextStyle(color: Colors.white, fontSize: 13,
             fontWeight: FontWeight.w600)),
@@ -857,8 +759,7 @@ class _M3UScreenState extends State<M3UScreen> {
           style: const TextStyle(color: C.muted, fontSize: 10)),
         trailing: IconButton(
           icon: const Icon(Icons.play_circle_outline, color: C.accent, size: 22),
-          tooltip: 'Ouvrir dans VLC',
-          onPressed: () => openInVlc(c.url)),
+          tooltip: 'Ouvrir dans VLC', onPressed: () => openInVlc(c.url)),
         onTap: () => Navigator.push(context, MaterialPageRoute(
           builder: (_) => PlayerScreen(title: c.name, url: c.url))),
       )),
@@ -903,13 +804,11 @@ class _DirectScreenState extends State<DirectScreen> {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           const Icon(Icons.link, color: C.accent, size: 60),
           const SizedBox(height: 16),
-          const Text('Lien direct',
-            style: TextStyle(color: Colors.white, fontSize: 20,
-              fontWeight: FontWeight.bold)),
+          const Text('Lien direct', style: TextStyle(color: Colors.white,
+            fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           const Text('Colle ton lien m3u8, rtsp, rtmp, mp4...',
-            style: TextStyle(color: C.muted, fontSize: 12),
-            textAlign: TextAlign.center),
+            style: TextStyle(color: C.muted, fontSize: 12), textAlign: TextAlign.center),
           const SizedBox(height: 24),
           TextField(controller: _ctrl,
             style: const TextStyle(color: Colors.white, fontSize: 13),
@@ -929,10 +828,9 @@ class _DirectScreenState extends State<DirectScreen> {
                 builder: (_) => PlayerScreen(title: 'Flux direct', url: u)));
             },
             icon: const Icon(Icons.play_arrow),
-            label: const Text('Lire dans l\'app',
-              style: TextStyle(fontWeight: FontWeight.bold)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: C.accent, foregroundColor: Colors.white,
+            label: const Text('Lire dans l\'app', style: TextStyle(fontWeight: FontWeight.bold)),
+            style: ElevatedButton.styleFrom(backgroundColor: C.accent,
+              foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14)))),
           const SizedBox(height: 10),
           SizedBox(width: double.infinity, child: OutlinedButton.icon(
@@ -942,10 +840,8 @@ class _DirectScreenState extends State<DirectScreen> {
               openInVlc(u);
             },
             icon: const Icon(Icons.play_circle_outline),
-            label: const Text('Ouvrir dans VLC',
-              style: TextStyle(fontWeight: FontWeight.bold)),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: C.accent,
+            label: const Text('Ouvrir dans VLC', style: TextStyle(fontWeight: FontWeight.bold)),
+            style: OutlinedButton.styleFrom(foregroundColor: C.accent,
               side: const BorderSide(color: C.accent, width: 1.5),
               padding: const EdgeInsets.symmetric(vertical: 14)))),
         ]))),
@@ -954,7 +850,7 @@ class _DirectScreenState extends State<DirectScreen> {
   );
 }
 
-/* ===== PLAYER AVEC WAKELOCK + VLC ===== */
+/* ===== PLAYER ===== */
 class PlayerScreen extends StatefulWidget {
   final String title;
   final String url;
@@ -1055,7 +951,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
           ? AspectRatio(aspectRatio: _ctrl!.value.aspectRatio,
               child: VideoPlayer(_ctrl!))
           : const SizedBox.shrink()),
-        // Top bar
         if (_controlsVisible) Positioned(top: 0, left: 0, right: 0,
           child: Container(
             padding: EdgeInsets.only(
@@ -1074,15 +969,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 maxLines: 1, overflow: TextOverflow.ellipsis)),
               IconButton(icon: const Icon(Icons.play_circle_outline, color: Colors.white),
                 tooltip: 'VLC', onPressed: () => openInVlc(widget.url)),
-              IconButton(icon: Icon(_remoteMode ? Icons.tv_off : Icons.tv,
-                color: Colors.white),
+              IconButton(icon: Icon(_remoteMode ? Icons.tv_off : Icons.tv, color: Colors.white),
                 tooltip: 'Mode télécommande', onPressed: _toggleRemote),
               IconButton(icon: Icon(_fullscreen
-                ? Icons.fullscreen_exit : Icons.fullscreen,
-                color: Colors.white),
+                ? Icons.fullscreen_exit : Icons.fullscreen, color: Colors.white),
                 onPressed: _toggleFullscreen),
             ]))),
-        // Barre de progression
         if (_controlsVisible && _ctrl != null &&
             _ctrl!.value.isInitialized && _ctrl!.value.duration.inSeconds > 0)
           Positioned(bottom: 100, left: 12, right: 12,
@@ -1090,7 +982,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
               colors: const VideoProgressColors(
                 playedColor: C.accent, bufferedColor: Colors.white30,
                 backgroundColor: Colors.white12))),
-        // Contrôles du bas
         if (_controlsVisible) Positioned(bottom: 0, left: 0, right: 0,
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -1101,13 +992,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
               if (_remoteMode) Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  _bigBtn(Icons.volume_off, 'Muet', () {
-                    if (_ctrl != null) setState(() =>
-                      _ctrl!.setVolume(_ctrl!.value.volume > 0 ? 0 : 1));
-                  }),
-                  const SizedBox(width: 30),
                   _bigBtn(Icons.speed, '${_speed}x', _cycleSpeed),
-                  const SizedBox(width: 30),
+                  const SizedBox(width: 40),
                   _bigBtn(Icons.play_circle_outline, 'VLC',
                     () => openInVlc(widget.url)),
                 ])),
@@ -1127,8 +1013,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   onPressed: () => _seek(10)),
               ]),
             ]))),
-        if (_loading) const Center(
-          child: CircularProgressIndicator(color: C.accent)),
+        if (_loading) const Center(child: CircularProgressIndicator(color: C.accent)),
         if (_error != null) Center(child: Container(
           margin: const EdgeInsets.all(20), padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(color: Colors.black87,
@@ -1151,7 +1036,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
               const SizedBox(width: 10),
               ElevatedButton.icon(onPressed: () => openInVlc(widget.url),
                 icon: const Icon(Icons.play_circle_outline), label: const Text('VLC'),
-                style: ElevatedButton.styleFrom(backgroundColor: C.green)),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green)),
             ]),
           ]))),
       ])),
