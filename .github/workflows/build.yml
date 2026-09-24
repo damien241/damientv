@@ -24,7 +24,7 @@ jobs:
         run: cp app.dart damien_tv_241/lib/main.dart
       - name: Ajouter les dépendances
         working-directory: damien_tv_241
-        run: flutter pub add video_player http shared_preferences cached_network_image
+        run: flutter pub add video_player http shared_preferences cached_network_image wakelock_plus url_launcher
       - name: Modifier AndroidManifest
         working-directory: damien_tv_241
         run: |
@@ -32,10 +32,20 @@ jobs:
           f = 'android/app/src/main/AndroidManifest.xml'
           c = open(f).read()
           if 'INTERNET' not in c:
-              c = c.replace('<application', '<uses-permission android:name="android.permission.INTERNET"/>\n    <application', 1)
+              c = c.replace('<application', '<uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>\n    <application', 1)
           c = c.replace('android:label="damien_tv_241"', 'android:label="Damien TV 241"')
           if 'usesCleartextTraffic' not in c:
               c = c.replace('<application', '<application android:usesCleartextTraffic="true"', 1)
+          # Queries pour ouvrir VLC
+          queries = '''<queries>
+            <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="http"/></intent>
+            <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="https"/></intent>
+            <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="rtsp"/></intent>
+            <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="vlc"/></intent>
+            <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="intent"/></intent>
+          </queries>'''
+          if '<queries>' not in c:
+              c = c.replace('</manifest>', queries + '\n</manifest>')
           open(f, 'w').write(c)
           print(open(f).read())
           PYEOF
