@@ -25,30 +25,62 @@ jobs:
       - name: Ajouter les dépendances
         working-directory: damien_tv_241
         run: flutter pub add video_player http shared_preferences cached_network_image wakelock_plus url_launcher
-      - name: Modifier AndroidManifest
+      - name: Remplacer AndroidManifest
         working-directory: damien_tv_241
         run: |
-          python3 << 'PYEOF'
-          f = 'android/app/src/main/AndroidManifest.xml'
-          c = open(f).read()
-          if 'INTERNET' not in c:
-              c = c.replace('<application', '<uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>\n    <application', 1)
-          c = c.replace('android:label="damien_tv_241"', 'android:label="Damien TV 241"')
-          if 'usesCleartextTraffic' not in c:
-              c = c.replace('<application', '<application android:usesCleartextTraffic="true"', 1)
-          # Queries pour ouvrir VLC
-          queries = '''<queries>
-            <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="http"/></intent>
-            <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="https"/></intent>
-            <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="rtsp"/></intent>
-            <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="vlc"/></intent>
-            <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="intent"/></intent>
-          </queries>'''
-          if '<queries>' not in c:
-              c = c.replace('</manifest>', queries + '\n</manifest>')
-          open(f, 'w').write(c)
-          print(open(f).read())
-          PYEOF
+          cat > android/app/src/main/AndroidManifest.xml << 'XMLEOF'
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET"/>
+              <uses-permission android:name="android.permission.WAKE_LOCK"/>
+              <queries>
+                  <intent>
+                      <action android:name="android.intent.action.VIEW" />
+                      <data android:scheme="http" />
+                  </intent>
+                  <intent>
+                      <action android:name="android.intent.action.VIEW" />
+                      <data android:scheme="https" />
+                  </intent>
+                  <intent>
+                      <action android:name="android.intent.action.VIEW" />
+                      <data android:scheme="rtsp" />
+                  </intent>
+                  <intent>
+                      <action android:name="android.intent.action.VIEW" />
+                      <data android:scheme="vlc" />
+                  </intent>
+              </queries>
+              <application
+                  android:label="Damien TV 241"
+                  android:name="${applicationName}"
+                  android:icon="@mipmap/ic_launcher"
+                  android:usesCleartextTraffic="true">
+                  <activity
+                      android:name=".MainActivity"
+                      android:exported="true"
+                      android:launchMode="singleTop"
+                      android:taskAffinity=""
+                      android:theme="@style/LaunchTheme"
+                      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+                      android:hardwareAccelerated="true"
+                      android:windowSoftInputMode="adjustResize">
+                      <meta-data
+                        android:name="io.flutter.embedding.android.NormalTheme"
+                        android:resource="@style/NormalTheme"
+                        />
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+                  <meta-data
+                      android:name="flutterEmbedding"
+                      android:value="2" />
+              </application>
+          </manifest>
+          XMLEOF
+          echo "Manifest remplacé avec succès"
+          cat android/app/src/main/AndroidManifest.xml
       - name: Compiler l'APK
         working-directory: damien_tv_241
         run: flutter build apk --release
