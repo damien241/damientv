@@ -25,6 +25,12 @@ jobs:
       - name: Ajouter les dépendances
         working-directory: damien_tv_241
         run: flutter pub add media_kit media_kit_video media_kit_libs_video http shared_preferences
+      - name: Corriger la version Android SDK
+        working-directory: damien_tv_241
+        run: |
+          sed -i 's/compileSdkVersion flutter.compileSdkVersion/compileSdkVersion 36/g' android/app/build.gradle || true
+          sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/g' android/app/build.gradle.kts || true
+          sed -i 's/compileSdkVersion = flutter.compileSdkVersion/compileSdkVersion = 36/g' android/app/build.gradle || true
       - name: Autoriser internet et HTTP
         working-directory: damien_tv_241
         run: |
