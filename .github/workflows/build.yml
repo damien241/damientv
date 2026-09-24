@@ -10,217 +10,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
-
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.0'
           channel: 'stable'
-
       - name: Créer le projet Flutter
         run: flutter create --org com.damientv241 --project-name damien_tv_241 damien_tv_241
-
-      - name: Écrire le code de l'app
-        run: |
-          cat > damien_tv_241/lib/main.dart << 'DARTEOF'
-          import 'package:flutter/material.dart';
-          import 'package:http/http.dart' as http;
-          import 'package:video_player/video_player.dart';
-
-          void main() => runApp(const DamienTvApp());
-
-          class DamienTvApp extends StatelessWidget {
-            const DamienTvApp({super.key});
-            @override
-            Widget build(BuildContext context) => MaterialApp(
-              title: 'Damien TV 241',
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData(useMaterial3: true, brightness: Brightness.dark,
-                scaffoldBackgroundColor: const Color(0xFF0B0F1A),
-                colorScheme: const ColorScheme.dark(primary: Color(0xFFE50914), secondary: Color(0xFFFBBF24))),
-              home: const HomeScreen(),
-            );
-          }
-
-          class Flag extends StatelessWidget {
-            final double w, h;
-            const Flag({super.key, this.w = 22, this.h = 14});
-            @override
-            Widget build(BuildContext context) => Container(width: w, height: h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2),
-                gradient: const LinearGradient(
-                  begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                  colors: [Color(0xFF009E60), Color(0xFF009E60), Color(0xFFFCD116), Color(0xFFFCD116), Color(0xFF3A75C4), Color(0xFF3A75C4)],
-                  stops: [0.0, 0.333, 0.333, 0.666, 0.666, 1.0])));
-          }
-
-          class Channel {
-            final String name, logo, group, url;
-            Channel({required this.name, this.logo = '', this.group = 'Général', required this.url});
-          }
-
-          List<Channel> parseM3U(String c) {
-            final list = <Channel>[];
-            Map<String, String>? a;
-            String? n;
-            for (var raw in c.split(RegExp(r'\r?\n'))) {
-              final l = raw.trim();
-              if (l.isEmpty) continue;
-              if (l.startsWith('#EXTINF:')) {
-                final info = l.substring(8);
-                a = {};
-                for (final m in RegExp(r'([\w-]+)="([^"]*)"').allMatches(info)) a[m.group(1)!] = m.group(2)!;
-                final p = info.split(',');
-                n = p.length > 1 ? p.last.trim() : 'Sans nom';
-              } else if (!l.startsWith('#') && a != null) {
-                list.add(Channel(name: n ?? 'Sans nom', logo: a['tvg-logo'] ?? '', group: a['group-title'] ?? 'Général', url: l));
-                a = null; n = null;
-              }
-            }
-            return list;
-          }
-
-          class HomeScreen extends StatefulWidget {
-            const HomeScreen({super.key});
-            @override
-            State<HomeScreen> createState() => _HomeScreenState();
-          }
-
-          class _HomeScreenState extends State<HomeScreen> {
-            final _ctrl = TextEditingController(text: 'https://tvradiozap.eu/live/x/vlc/d/tvzeu.m3u');
-            List<Channel> _channels = [];
-            bool _loading = false;
-            String? _error;
-
-            Future<void> _load() async {
-              setState(() { _loading = true; _error = null; });
-              try {
-                final res = await http.get(Uri.parse(_ctrl.text.trim()));
-                if (res.statusCode != 200) throw Exception('HTTP ' + res.statusCode.toString());
-                final ch = parseM3U(res.body);
-                if (ch.isEmpty) throw Exception('Aucune chaine');
-                setState(() { _channels = ch; _loading = false; });
-              } catch (e) {
-                setState(() { _error = e.toString(); _loading = false; });
-              }
-            }
-
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              appBar: AppBar(backgroundColor: const Color(0xFF111827),
-                title: Row(children: [
-                  Container(width: 32, height: 32,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(colors: [Color(0xFFE50914), Color(0xFFFF2D3F)]),
-                      borderRadius: BorderRadius.circular(8)),
-                    child: const Center(child: Text('D', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16)))),
-                  const SizedBox(width: 10),
-                  const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Row(children: [Text('Damien TV 241', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)), SizedBox(width: 6), Flag(w: 18, h: 11)]),
-                    Text('PROTOTYPE NEYLA 241', style: TextStyle(color: Color(0xFFFBBF24), fontSize: 9, letterSpacing: 0.8, fontWeight: FontWeight.w600)),
-                  ])),
-                ]),
-              ),
-              body: Column(children: [
-                Container(width: double.infinity, padding: const EdgeInsets.symmetric(vertical: 5),
-                  decoration: const BoxDecoration(gradient: LinearGradient(colors: [Color(0xFF009E60), Color(0xFFFCD116), Color(0xFF3A75C4)])),
-                  child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Flag(w: 16, h: 10), SizedBox(width: 8),
-                    Text('PROTOTYPE NEYLA 241', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 2)),
-                    SizedBox(width: 8), Flag(w: 16, h: 10)])),
-                Padding(padding: const EdgeInsets.all(8),
-                  child: Row(children: [
-                    Expanded(child: TextField(controller: _ctrl, style: const TextStyle(color: Colors.white, fontSize: 12),
-                      decoration: InputDecoration(hintText: 'URL M3U', filled: true, fillColor: const Color(0xFF0D1220),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFF232B42)))))),
-                    const SizedBox(width: 6),
-                    ElevatedButton(onPressed: _loading ? null : _load,
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE50914), foregroundColor: Colors.white),
-                      child: const Text('Charger')),
-                  ])),
-                Expanded(child: _loading ? const Center(child: CircularProgressIndicator(color: Color(0xFFE50914)))
-                  : _error != null ? Center(child: Text(_error!, style: const TextStyle(color: Colors.white)))
-                  : ListView.builder(itemCount: _channels.length,
-                      itemBuilder: (_, i) => ListTile(
-                        leading: _channels[i].logo.isEmpty ? const Icon(Icons.tv, color: Colors.white)
-                          : Image.network(_channels[i].logo!, width: 40, height: 40, errorBuilder: (_, __, ___) => const Icon(Icons.tv, color: Colors.white)),
-                        title: Text(_channels[i].name, style: const TextStyle(color: Colors.white)),
-                        subtitle: Text(_channels[i].group, style: const TextStyle(color: Color(0xFF8B96B8), fontSize: 11)),
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => PlayerScreen(channel: _channels[i])))))),
-                Container(width: double.infinity, padding: const EdgeInsets.symmetric(vertical: 7),
-                  decoration: const BoxDecoration(border: Border(top: BorderSide(color: Color(0xFF232B42)))),
-                  child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Flag(w: 14, h: 9), SizedBox(width: 6),
-                    Text('Concu par Damien (Starly Koumba)', style: TextStyle(color: Color(0xFF8B96B8), fontSize: 10)),
-                    SizedBox(width: 6), Flag(w: 14, h: 9)])),
-              ]));
-          }
-
-          class PlayerScreen extends StatefulWidget {
-            final Channel channel;
-            const PlayerScreen({super.key, required this.channel});
-            @override
-            State<PlayerScreen> createState() => _PlayerScreenState();
-          }
-
-          class _PlayerScreenState extends State<PlayerScreen> {
-            VideoPlayerController? _ctrl;
-            bool _loading = true;
-            String? _error;
-
-            @override
-            void initState() { super.initState(); _start(); }
-
-            Future<void> _start() async {
-              try {
-                setState(() { _loading = true; _error = null; });
-                _ctrl = VideoPlayerController.networkUrl(Uri.parse(widget.channel.url));
-                await _ctrl!.initialize();
-                _ctrl!.play();
-                setState(() => _loading = false);
-              } catch (e) {
-                setState(() { _error = e.toString(); _loading = false; });
-              }
-            }
-
-            @override
-            void dispose() { _ctrl?.dispose(); super.dispose(); }
-
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              backgroundColor: Colors.black,
-              appBar: AppBar(backgroundColor: const Color(0xFF111827),
-                title: Row(children: [
-                  const Flag(w: 20, h: 12), const SizedBox(width: 8),
-                  Expanded(child: Text(widget.channel.name, style: const TextStyle(fontSize: 15, color: Colors.white), overflow: TextOverflow.ellipsis)),
-                ]),
-                actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _start)]),
-              body: Center(child: _error != null ? Padding(padding: const EdgeInsets.all(20), child: Text(_error!, style: const TextStyle(color: Colors.white), textAlign: TextAlign.center))
-                : _loading ? const CircularProgressIndicator(color: Color(0xFFE50914))
-                : AspectRatio(aspectRatio: _ctrl!.value.aspectRatio, child: VideoPlayer(_ctrl!))));
-          }
-          DARTEOF
-
+      - name: Copier le code de l'app
+        run: cp app.dart damien_tv_241/lib/main.dart
       - name: Ajouter les dépendances
         working-directory: damien_tv_241
-        run: flutter pub add video_player http
-
+        run: flutter pub add media_kit media_kit_video media_kit_libs_video http shared_preferences
       - name: Autoriser internet et HTTP
         working-directory: damien_tv_241
         run: |
           sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <application|' android/app/src/main/AndroidManifest.xml
           sed -i 's|android:label="damien_tv_241"|android:label="Damien TV 241" android:usesCleartextTraffic="true"|' android/app/src/main/AndroidManifest.xml
-
       - name: Compiler l'APK
         working-directory: damien_tv_241
         run: flutter build apk --release
-
-      - name: Uploader l'APK
+      - name: Envoyer l'APK
         uses: actions/upload-artifact@v4
         with:
           name: damien-tv-241-apk
