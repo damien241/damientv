@@ -25,11 +25,20 @@ jobs:
       - name: Ajouter les dépendances
         working-directory: damien_tv_241
         run: flutter pub add video_player http shared_preferences cached_network_image
-      - name: Autoriser internet et HTTP
+      - name: Modifier AndroidManifest
         working-directory: damien_tv_241
         run: |
-          sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <application|' android/app/src/main/AndroidManifest.xml
-          sed -i 's|android:label="damien_tv_241"|android:label="Damien TV 241" android:usesCleartextTraffic="true"|' android/app/src/main/AndroidManifest.xml
+          python3 << 'PYEOF'
+          f = 'android/app/src/main/AndroidManifest.xml'
+          c = open(f).read()
+          if 'INTERNET' not in c:
+              c = c.replace('<application', '<uses-permission android:name="android.permission.INTERNET"/>\n    <application', 1)
+          c = c.replace('android:label="damien_tv_241"', 'android:label="Damien TV 241"')
+          if 'usesCleartextTraffic' not in c:
+              c = c.replace('<application', '<application android:usesCleartextTraffic="true"', 1)
+          open(f, 'w').write(c)
+          print(open(f).read())
+          PYEOF
       - name: Compiler l'APK
         working-directory: damien_tv_241
         run: flutter build apk --release
