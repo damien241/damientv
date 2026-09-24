@@ -16,7 +16,7 @@ jobs:
           java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.27.0'
           channel: 'stable'
       - name: Créer le projet Flutter
         run: flutter create --org com.damientv241 --project-name damien_tv_241 damien_tv_241
@@ -24,13 +24,7 @@ jobs:
         run: cp app.dart damien_tv_241/lib/main.dart
       - name: Ajouter les dépendances
         working-directory: damien_tv_241
-        run: flutter pub add media_kit media_kit_video media_kit_libs_video http shared_preferences
-      - name: Corriger la version Android SDK
-        working-directory: damien_tv_241
-        run: |
-          sed -i 's/compileSdkVersion flutter.compileSdkVersion/compileSdkVersion 36/g' android/app/build.gradle || true
-          sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/g' android/app/build.gradle.kts || true
-          sed -i 's/compileSdkVersion = flutter.compileSdkVersion/compileSdkVersion = 36/g' android/app/build.gradle || true
+        run: flutter pub add video_player http shared_preferences
       - name: Autoriser internet et HTTP
         working-directory: damien_tv_241
         run: |
