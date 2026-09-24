@@ -79,8 +79,7 @@ jobs:
               </application>
           </manifest>
           XMLEOF
-          echo "Manifest remplacé avec succès"
-          cat android/app/src/main/AndroidManifest.xml
+          echo "Manifest OK"
       - name: Compiler l'APK
         working-directory: damien_tv_241
         run: flutter build apk --release
