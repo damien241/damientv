@@ -24,11 +24,11 @@ jobs:
         run: cp app.dart damien_tv_241/lib/main.dart
       - name: Dépendances
         working-directory: damien_tv_241
-        run: flutter pub add video_player http
+        run: flutter pub add video_player http wakelock_plus
       - name: Autoriser internet
         working-directory: damien_tv_241
         run: |
-          sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <application|' android/app/src/main/AndroidManifest.xml
+          sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>\n    <application|' android/app/src/main/AndroidManifest.xml
           sed -i 's|android:label="damien_tv_241"|android:label="Damien TV 241" android:usesCleartextTraffic="true"|' android/app/src/main/AndroidManifest.xml
       - name: Compiler
         working-directory: damien_tv_241
