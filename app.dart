@@ -5,18 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:convert';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
   await WakelockPlus.enable();
   runApp(const DamienApp());
 }
-
-const kTestBanner = 'ca-app-pub-3940256099942544/6300978111';
-const kTestInterstitial = 'ca-app-pub-3940256099942544/1033173712';
 
 class C {
   static const bg = Color(0xFF0B0F1A);
@@ -74,7 +69,7 @@ const List<PlaylistPreset> kPresets = [
   ),
 ];
 
-/* ===== ABONNEMENTS IPTV (gratuit + payant, 100% légaux) ===== */
+/* ===== ABONNEMENTS ===== */
 class Subscription {
   final String name, description, url, badge;
   final Color color;
@@ -167,7 +162,7 @@ const List<Subscription> kPaidSubscriptions = [
   ),
   Subscription(
     name: 'Disney+',
-    description: 'Disney, Pixar, Marvel, Star Wars, National Geographic.',
+    description: 'Disney, Pixar, Marvel, Star Wars.',
     url: 'https://www.disneyplus.com',
     badge: 'À partir de 5,99 €',
     color: Color(0xFF113CCF),
@@ -175,7 +170,7 @@ const List<Subscription> kPaidSubscriptions = [
   ),
   Subscription(
     name: 'Prime Video',
-    description: 'Films et séries Amazon Originals + catalogue.',
+    description: 'Films et séries Amazon Originals.',
     url: 'https://www.primevideo.com',
     badge: 'Inclus avec Prime',
     color: Color(0xFF00A8E1),
@@ -201,7 +196,6 @@ class Flag extends StatelessWidget {
   );
 }
 
-/* ===== MODEL ===== */
 class Channel {
   final String name, logo, group, url;
   Channel({required this.name, this.logo = '',
@@ -235,7 +229,6 @@ List<Channel> parseM3U(String c) {
   return list;
 }
 
-/* ===== STORAGE ===== */
 class Storage {
   static const _f = 'dtv_favs', _u = 'dtv_url';
   static Future<List<Channel>> loadFavs() async {
@@ -258,7 +251,6 @@ class Storage {
   }
 }
 
-/* ===== VLC ===== */
 Future<void> openInVlc(String url) async {
   try {
     final iu = 'intent://${url.replaceFirst(RegExp(r'^https?://'), '')}'
@@ -288,69 +280,6 @@ Future<void> openExternal(String url) async {
   } catch (_) {}
 }
 
-/* ===== BANNIÈRE ===== */
-class BannerAdWidget extends StatefulWidget {
-  const BannerAdWidget({super.key});
-  @override
-  State<BannerAdWidget> createState() => _BannerAdWidgetState();
-}
-
-class _BannerAdWidgetState extends State<BannerAdWidget> {
-  BannerAd? _ad;
-  bool _loaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _ad = BannerAd(
-      adUnitId: kTestBanner,
-      size: AdSize.banner,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (_) => setState(() => _loaded = true),
-        onAdFailedToLoad: (ad, _) { ad.dispose(); _ad = null; }),
-    )..load();
-  }
-  @override
-  void dispose() { _ad?.dispose(); super.dispose(); }
-  @override
-  Widget build(BuildContext context) {
-    if (!_loaded || _ad == null) return const SizedBox(height: 50);
-    return Container(
-      alignment: Alignment.center,
-      width: _ad!.size.width.toDouble(),
-      height: _ad!.size.height.toDouble(),
-      child: AdWidget(ad: _ad!));
-  }
-}
-
-/* ===== INTERSTITIEL ===== */
-class AdHelper {
-  static InterstitialAd? _interstitial;
-  static void loadInterstitial() {
-    InterstitialAd.load(
-      adUnitId: kTestInterstitial,
-      request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) => _interstitial = ad,
-        onAdFailedToLoad: (_) => _interstitial = null),
-    );
-  }
-  static void showInterstitial({VoidCallback? onDone}) {
-    if (_interstitial != null) {
-      _interstitial!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdDismissedFullScreenContent: (ad) {
-          ad.dispose(); _interstitial = null;
-          loadInterstitial(); onDone?.call();
-        },
-        onAdFailedToShowFullScreenContent: (ad, _) {
-          ad.dispose(); _interstitial = null; onDone?.call();
-        });
-      _interstitial!.show();
-    } else { onDone?.call(); loadInterstitial(); }
-  }
-}
-
 /* ===== APP ===== */
 class DamienApp extends StatelessWidget {
   const DamienApp({super.key});
@@ -372,11 +301,6 @@ class RootScreen extends StatefulWidget {
 
 class _RootScreenState extends State<RootScreen> {
   int _idx = 0;
-  @override
-  void initState() {
-    super.initState();
-    AdHelper.loadInterstitial();
-  }
   @override
   Widget build(BuildContext context) => Scaffold(
     body: IndexedStack(index: _idx, children: const [
@@ -535,13 +459,6 @@ class _M3UScreenState extends State<M3UScreen> {
     await Storage.saveFavs(_favs);
   }
 
-  void _openChannel(Channel c) {
-    AdHelper.showInterstitial(onDone: () {
-      Navigator.push(context, MaterialPageRoute(
-        builder: (_) => PlayerScreen(title: c.name, url: c.url)));
-    });
-  }
-
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: C.bg,
@@ -612,7 +529,6 @@ class _M3UScreenState extends State<M3UScreen> {
       Expanded(child: _loading
         ? const Center(child: CircularProgressIndicator(color: C.accent))
         : _error != null ? _err() : _list()),
-      const BannerAdWidget(),
       const CreditBar(),
     ]));
 
@@ -652,7 +568,8 @@ class _M3UScreenState extends State<M3UScreen> {
             IconButton(icon: const Icon(Icons.play_circle_outline, color: C.accent, size: 22),
               tooltip: 'VLC', onPressed: () => openInVlc(c.url)),
           ]),
-          onTap: () => _openChannel(c),
+          onTap: () => Navigator.push(context, MaterialPageRoute(
+            builder: (_) => PlayerScreen(title: c.name, url: c.url))),
         );
       }),
     ]).toList());
@@ -716,10 +633,8 @@ class _DirectScreenState extends State<DirectScreen> {
             onPressed: () {
               final u = _ctrl.text.trim();
               if (u.isEmpty) return;
-              AdHelper.showInterstitial(onDone: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (_) => PlayerScreen(title: 'Flux direct', url: u)));
-              });
+              Navigator.push(context, MaterialPageRoute(
+                builder: (_) => PlayerScreen(title: 'Flux direct', url: u)));
             },
             icon: const Icon(Icons.play_arrow),
             label: const Text('Lire dans l\'app', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -739,12 +654,11 @@ class _DirectScreenState extends State<DirectScreen> {
               side: const BorderSide(color: C.accent, width: 1.5),
               padding: const EdgeInsets.symmetric(vertical: 14)))),
         ]))),
-      const BannerAdWidget(),
       const CreditBar(),
     ]));
 }
 
-/* ===== ABONNEMENT (Gratuit + Payant) ===== */
+/* ===== ABONNEMENT ===== */
 class SubscriptionScreen extends StatelessWidget {
   const SubscriptionScreen({super.key});
 
@@ -754,7 +668,6 @@ class SubscriptionScreen extends StatelessWidget {
     body: Column(children: [
       const AppHeader(subtitle: 'PROTOTYPE NEYLA 241 • ABONNEMENT'),
       Expanded(child: ListView(padding: const EdgeInsets.all(12), children: [
-        // Bannière
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
@@ -781,8 +694,6 @@ class SubscriptionScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold, letterSpacing: 1))),
           ])),
         const SizedBox(height: 20),
-
-        // SECTION GRATUIT
         Row(children: [
           Container(width: 4, height: 20, color: C.green),
           const SizedBox(width: 8),
@@ -790,10 +701,8 @@ class SubscriptionScreen extends StatelessWidget {
             fontSize: 15, fontWeight: FontWeight.bold, letterSpacing: 1)),
         ]),
         const SizedBox(height: 10),
-        ...kFreeSubscriptions.map((s) => _subCard(context, s)),
+        ...kFreeSubscriptions.map((s) => _subCard(s)),
         const SizedBox(height: 20),
-
-        // SECTION PAYANT
         Row(children: [
           Container(width: 4, height: 20, color: C.gold),
           const SizedBox(width: 8),
@@ -801,8 +710,7 @@ class SubscriptionScreen extends StatelessWidget {
             fontSize: 15, fontWeight: FontWeight.bold, letterSpacing: 1)),
         ]),
         const SizedBox(height: 10),
-        ...kPaidSubscriptions.map((s) => _subCard(context, s)),
-
+        ...kPaidSubscriptions.map((s) => _subCard(s)),
         const SizedBox(height: 20),
         Container(
           padding: const EdgeInsets.all(12),
@@ -818,10 +726,9 @@ class SubscriptionScreen extends StatelessWidget {
         const SizedBox(height: 20),
         const CreditBar(),
       ])),
-      const BannerAdWidget(),
     ]));
 
-  Widget _subCard(BuildContext context, Subscription s) => Container(
+  Widget _subCard(Subscription s) => Container(
     margin: const EdgeInsets.only(bottom: 10),
     decoration: BoxDecoration(color: C.card,
       borderRadius: BorderRadius.circular(12),
@@ -904,18 +811,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   setState(() => _favs.removeAt(i));
                   await Storage.saveFavs(_favs);
                 }),
-              onTap: () => AdHelper.showInterstitial(onDone: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (_) => PlayerScreen(title: c.name, url: c.url)));
-              }),
+              onTap: () => Navigator.push(context, MaterialPageRoute(
+                builder: (_) => PlayerScreen(title: c.name, url: c.url))),
             );
           })),
-      const BannerAdWidget(),
       const CreditBar(),
     ]));
 }
 
-/* ===== PLAYER (sans pub) ===== */
+/* ===== PLAYER ===== */
 class PlayerScreen extends StatefulWidget {
   final String title;
   final String url;
