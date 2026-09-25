@@ -23,7 +23,6 @@ class C {
   static const blue = Color(0xFF3A75C4);
 }
 
-/* ===== PLAYLISTS PRÉ-CONFIGURÉES ===== */
 class PlaylistPreset {
   final String name, url;
   final IconData icon;
@@ -37,39 +36,23 @@ class PlaylistPreset {
 }
 
 const List<PlaylistPreset> kPresets = [
-  PlaylistPreset(
-    name: 'France',
+  PlaylistPreset(name: 'France',
     url: 'https://iptv-org.github.io/iptv/countries/fr.m3u',
-    icon: Icons.flag,
-    color: C.blue,
-  ),
-  PlaylistPreset(
-    name: 'Belgique',
+    icon: Icons.flag, color: C.blue),
+  PlaylistPreset(name: 'Belgique',
     url: 'https://iptv-org.github.io/iptv/countries/be.m3u',
-    icon: Icons.flag_circle,
-    color: C.gold,
-  ),
-  PlaylistPreset(
-    name: 'Free-TV',
+    icon: Icons.flag_circle, color: C.gold),
+  PlaylistPreset(name: 'Free-TV',
     url: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8',
-    icon: Icons.public,
-    color: C.green,
-  ),
-  PlaylistPreset(
-    name: 'Monde',
+    icon: Icons.public, color: C.green),
+  PlaylistPreset(name: 'Monde',
     url: 'https://iptv-org.github.io/iptv/index.m3u',
-    icon: Icons.language,
-    color: C.accent,
-  ),
-  PlaylistPreset(
-    name: 'TVradioZap',
+    icon: Icons.language, color: C.accent),
+  PlaylistPreset(name: 'TVradioZap',
     url: 'https://tvradiozap.eu/live/x/vlc/d/tvzeu.m3u',
-    icon: Icons.live_tv,
-    color: C.muted,
-  ),
+    icon: Icons.live_tv, color: C.muted),
 ];
 
-/* ===== ABONNEMENTS ===== */
 class Subscription {
   final String name, description, url, badge;
   final Color color;
@@ -85,97 +68,53 @@ class Subscription {
 }
 
 const List<Subscription> kFreeSubscriptions = [
-  Subscription(
-    name: 'Molotov',
+  Subscription(name: 'Molotov',
     description: 'Plus de 40 chaînes françaises en direct et replay.',
-    url: 'https://www.molotov.tv',
-    badge: 'GRATUIT',
-    color: C.green,
-    icon: Icons.live_tv,
-  ),
-  Subscription(
-    name: 'France.tv',
+    url: 'https://www.molotov.tv', badge: 'GRATUIT',
+    color: C.green, icon: Icons.live_tv),
+  Subscription(name: 'France.tv',
     description: 'Direct et replay des chaînes France Télévisions.',
-    url: 'https://www.france.tv',
-    badge: 'GRATUIT',
-    color: C.blue,
-    icon: Icons.play_circle,
-  ),
-  Subscription(
-    name: 'Arte.tv',
+    url: 'https://www.france.tv', badge: 'GRATUIT',
+    color: C.blue, icon: Icons.play_circle),
+  Subscription(name: 'Arte.tv',
     description: 'Documentaires, films et concerts en accès libre.',
-    url: 'https://www.arte.tv/fr/',
-    badge: 'GRATUIT',
-    color: Color(0xFFFF6600),
-    icon: Icons.movie,
-  ),
-  Subscription(
-    name: 'TF1+',
+    url: 'https://www.arte.tv/fr/', badge: 'GRATUIT',
+    color: Color(0xFFFF6600), icon: Icons.movie),
+  Subscription(name: 'TF1+',
     description: 'Direct TF1/TMC/TFX + replays et programmes exclusifs.',
-    url: 'https://www.tf1.fr',
-    badge: 'GRATUIT',
-    color: Color(0xFF0046BE),
-    icon: Icons.play_arrow,
-  ),
-  Subscription(
-    name: 'Pluto TV',
+    url: 'https://www.tf1.fr', badge: 'GRATUIT',
+    color: Color(0xFF0046BE), icon: Icons.play_arrow),
+  Subscription(name: 'Pluto TV',
     description: 'Chaînes thématiques + films et séries en libre accès.',
-    url: 'https://pluto.tv',
-    badge: 'GRATUIT',
-    color: Color(0xFFFFCC00),
-    icon: Icons.tv,
-  ),
-  Subscription(
-    name: 'Rakuten TV',
+    url: 'https://pluto.tv', badge: 'GRATUIT',
+    color: Color(0xFFFFCC00), icon: Icons.tv),
+  Subscription(name: 'Rakuten TV',
     description: 'Films gratuits et chaînes TV sans inscription.',
-    url: 'https://www.rakuten.tv',
-    badge: 'GRATUIT',
-    color: Color(0xFFBF0000),
-    icon: Icons.movie_filter,
-  ),
+    url: 'https://www.rakuten.tv', badge: 'GRATUIT',
+    color: Color(0xFFBF0000), icon: Icons.movie_filter),
 ];
 
 const List<Subscription> kPaidSubscriptions = [
-  Subscription(
-    name: 'Molotov Extra',
+  Subscription(name: 'Molotov Extra',
     description: 'Enregistrement cloud + 100 chaînes supplémentaires.',
-    url: 'https://www.molotov.tv',
-    badge: '6,99 €/mois',
-    color: C.green,
-    icon: Icons.live_tv,
-  ),
-  Subscription(
-    name: 'myCANAL',
+    url: 'https://www.molotov.tv', badge: '6,99 €/mois',
+    color: C.green, icon: Icons.live_tv),
+  Subscription(name: 'myCANAL',
     description: 'Canal+ en direct, sport, cinéma et séries.',
-    url: 'https://www.canalplus.com',
-    badge: 'À partir de 22,99 €',
-    color: Color(0xFF000000),
-    icon: Icons.star,
-  ),
-  Subscription(
-    name: 'Netflix',
+    url: 'https://www.canalplus.com', badge: 'À partir de 22,99 €',
+    color: Color(0xFF000000), icon: Icons.star),
+  Subscription(name: 'Netflix',
     description: 'Films, séries, documentaires en illimité.',
-    url: 'https://www.netflix.com',
-    badge: 'À partir de 7,99 €',
-    color: Color(0xFFE50914),
-    icon: Icons.movie,
-  ),
-  Subscription(
-    name: 'Disney+',
+    url: 'https://www.netflix.com', badge: 'À partir de 7,99 €',
+    color: Color(0xFFE50914), icon: Icons.movie),
+  Subscription(name: 'Disney+',
     description: 'Disney, Pixar, Marvel, Star Wars.',
-    url: 'https://www.disneyplus.com',
-    badge: 'À partir de 5,99 €',
-    color: Color(0xFF113CCF),
-    icon: Icons.auto_awesome,
-  ),
-  Subscription(
-    name: 'Prime Video',
+    url: 'https://www.disneyplus.com', badge: 'À partir de 5,99 €',
+    color: Color(0xFF113CCF), icon: Icons.auto_awesome),
+  Subscription(name: 'Prime Video',
     description: 'Films et séries Amazon Originals.',
-    url: 'https://www.primevideo.com',
-    badge: 'Inclus avec Prime',
-    color: Color(0xFF00A8E1),
-    icon: Icons.play_circle,
-  ),
+    url: 'https://www.primevideo.com', badge: 'Inclus avec Prime',
+    color: Color(0xFF00A8E1), icon: Icons.play_circle),
 ];
 
 class Flag extends StatelessWidget {
@@ -251,36 +190,12 @@ class Storage {
   }
 }
 
-Future<void> openInVlc(String url) async {
-  try {
-    final iu = 'intent://${url.replaceFirst(RegExp(r'^https?://'), '')}'
-        '#Intent;scheme=${url.startsWith('https') ? 'https' : 'http'};'
-        'package=org.videolan.vlc;type=video/*;end';
-    final u = Uri.parse(iu);
-    if (await canLaunchUrl(u)) {
-      await launchUrl(u, mode: LaunchMode.externalApplication);
-      return;
-    }
-  } catch (_) {}
-  try {
-    final u = Uri.parse('vlc://$url');
-    if (await canLaunchUrl(u)) {
-      await launchUrl(u, mode: LaunchMode.externalApplication);
-      return;
-    }
-  } catch (_) {}
-  try {
-    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-  } catch (_) {}
-}
-
 Future<void> openExternal(String url) async {
   try {
     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   } catch (_) {}
 }
 
-/* ===== APP ===== */
 class DamienApp extends StatelessWidget {
   const DamienApp({super.key});
   @override
@@ -561,13 +476,9 @@ class _M3UScreenState extends State<M3UScreen> {
               fontWeight: FontWeight.w600)),
           subtitle: Text(c.group, maxLines: 1, overflow: TextOverflow.ellipsis,
             style: const TextStyle(color: C.muted, fontSize: 10)),
-          trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-            IconButton(icon: Icon(fav ? Icons.star : Icons.star_border,
-              color: fav ? C.gold : C.muted, size: 20),
-              onPressed: () => _toggleFav(c)),
-            IconButton(icon: const Icon(Icons.play_circle_outline, color: C.accent, size: 22),
-              tooltip: 'VLC', onPressed: () => openInVlc(c.url)),
-          ]),
+          trailing: IconButton(icon: Icon(fav ? Icons.star : Icons.star_border,
+            color: fav ? C.gold : C.muted, size: 20),
+            onPressed: () => _toggleFav(c)),
           onTap: () => Navigator.push(context, MaterialPageRoute(
             builder: (_) => PlayerScreen(title: c.name, url: c.url))),
         );
@@ -637,21 +548,9 @@ class _DirectScreenState extends State<DirectScreen> {
                 builder: (_) => PlayerScreen(title: 'Flux direct', url: u)));
             },
             icon: const Icon(Icons.play_arrow),
-            label: const Text('Lire dans l\'app', style: TextStyle(fontWeight: FontWeight.bold)),
+            label: const Text('Lire le lien', style: TextStyle(fontWeight: FontWeight.bold)),
             style: ElevatedButton.styleFrom(backgroundColor: C.accent,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 14)))),
-          const SizedBox(height: 10),
-          SizedBox(width: double.infinity, child: OutlinedButton.icon(
-            onPressed: () {
-              final u = _ctrl.text.trim();
-              if (u.isEmpty) return;
-              openInVlc(u);
-            },
-            icon: const Icon(Icons.play_circle_outline),
-            label: const Text('Ouvrir dans VLC', style: TextStyle(fontWeight: FontWeight.bold)),
-            style: OutlinedButton.styleFrom(foregroundColor: C.accent,
-              side: const BorderSide(color: C.accent, width: 1.5),
               padding: const EdgeInsets.symmetric(vertical: 14)))),
         ]))),
       const CreditBar(),
@@ -920,8 +819,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 maxLines: 1, overflow: TextOverflow.ellipsis)),
               IconButton(icon: const Icon(Icons.speed, color: Colors.white),
                 tooltip: '${_speed}x', onPressed: _cycleSpeed),
-              IconButton(icon: const Icon(Icons.play_circle_outline, color: Colors.white),
-                tooltip: 'VLC', onPressed: () => openInVlc(widget.url)),
               IconButton(icon: Icon(_fullscreen
                 ? Icons.fullscreen_exit : Icons.fullscreen, color: Colors.white),
                 onPressed: _toggleFullscreen),
@@ -971,15 +868,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
             Text(_error!, textAlign: TextAlign.center,
               style: const TextStyle(color: C.muted, fontSize: 11)),
             const SizedBox(height: 16),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              ElevatedButton.icon(onPressed: _start,
-                icon: const Icon(Icons.refresh), label: const Text('Réessayer'),
-                style: ElevatedButton.styleFrom(backgroundColor: C.accent)),
-              const SizedBox(width: 10),
-              ElevatedButton.icon(onPressed: () => openInVlc(widget.url),
-                icon: const Icon(Icons.play_circle_outline), label: const Text('VLC'),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green)),
-            ]),
+            ElevatedButton.icon(onPressed: _start,
+              icon: const Icon(Icons.refresh), label: const Text('Réessayer'),
+              style: ElevatedButton.styleFrom(backgroundColor: C.accent)),
           ]))),
       ])));
 }
