@@ -18,7 +18,7 @@ jobs:
       - name: Créer la structure du projet
         run: |
           mkdir -p app/src/main/java/com/damientv241/app
-          mkdir -p app/src/main/res/values
+          mkdir -p gradle/wrapper
 
       - name: settings.gradle
         run: |
@@ -39,6 +39,16 @@ jobs:
               }
           }
           allprojects { repositories { google(); mavenCentral() } }
+          EOF
+
+      - name: gradle-wrapper.properties
+        run: |
+          cat > gradle/wrapper/gradle-wrapper.properties << 'EOF'
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.2-bin.zip
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dists
           EOF
 
       - name: app/build.gradle
@@ -478,8 +488,11 @@ jobs:
           }
           EOF
 
+      - name: Setup Gradle wrapper
+        run: gradle wrapper --gradle-version 8.2 --no-daemon
+
       - name: Compiler l'APK
-        run: gradle assembleRelease --no-daemon
+        run: ./gradlew assembleRelease --no-daemon
 
       - name: Renommer APK
         run: |
