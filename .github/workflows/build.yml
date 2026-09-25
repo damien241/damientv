@@ -14,41 +14,490 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
-      - name: Créer le projet Flutter
-        run: flutter create --org com.damientv241 --project-name damien_tv_241 damien_tv_241
-      - name: Copier le code
-        run: cp app.dart damien_tv_241/lib/main.dart
-      - name: Dépendances (2 seulement)
-        working-directory: damien_tv_241
-        run: flutter pub add video_player http
-      - name: Autoriser internet + écran toujours allumé
-        working-directory: damien_tv_241
+      - uses: android-actions/setup-android@v3
+
+      - name: Créer la structure du projet
         run: |
-          sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>\n    <application|' android/app/src/main/AndroidManifest.xml
-          sed -i 's|android:label="damien_tv_241"|android:label="Damien TV 241" android:usesCleartextTraffic="true"|' android/app/src/main/AndroidManifest.xml
-          cat > android/app/src/main/kotlin/com/damientv241/damien_tv_241/MainActivity.kt << 'KTEOF'
-          package com.damientv241.damien_tv_241
+          mkdir -p app/src/main/java/com/damientv241/app
+          mkdir -p app/src/main/res/values
 
+      - name: settings.gradle
+        run: |
+          cat > settings.gradle << 'EOF'
+          rootProject.name = "DamienTV241"
+          include ':app'
+          EOF
+
+      - name: build.gradle (projet)
+        run: |
+          cat > build.gradle << 'EOF'
+          buildscript {
+              ext.kotlin_version = '1.9.10'
+              repositories { google(); mavenCentral() }
+              dependencies {
+                  classpath 'com.android.tools.build:gradle:8.1.4'
+                  classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+              }
+          }
+          allprojects { repositories { google(); mavenCentral() } }
+          EOF
+
+      - name: app/build.gradle
+        run: |
+          cat > app/build.gradle << 'EOF'
+          plugins {
+              id 'com.android.application'
+              id 'kotlin-android'
+          }
+          android {
+              namespace 'com.damientv241.app'
+              compileSdk 34
+              defaultConfig {
+                  applicationId "com.damientv241.app"
+                  minSdk 21
+                  targetSdk 34
+                  versionCode 1
+                  versionName "1.0"
+              }
+              buildTypes {
+                  release {
+                      minifyEnabled false
+                      signingConfig signingConfigs.debug
+                  }
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+              kotlinOptions { jvmTarget = '17' }
+          }
+          dependencies {
+              implementation 'androidx.core:core-ktx:1.12.0'
+              implementation 'androidx.appcompat:appcompat:1.6.1'
+              implementation 'androidx.recyclerview:recyclerview:1.3.2'
+              implementation 'com.google.android.material:material:1.11.0'
+              implementation 'androidx.media3:media3-exoplayer:1.2.1'
+              implementation 'androidx.media3:media3-exoplayer-hls:1.2.1'
+              implementation 'androidx.media3:media3-ui:1.2.1'
+              implementation 'androidx.media3:media3-datasource-okhttp:1.2.1'
+              implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+              implementation 'com.github.bumptech.glide:glide:4.16.0'
+              implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+          }
+          EOF
+
+      - name: AndroidManifest
+        run: |
+          cat > app/src/main/AndroidManifest.xml << 'EOF'
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET"/>
+              <uses-permission android:name="android.permission.WAKE_LOCK"/>
+              <application
+                  android:label="Damien TV 241"
+                  android:usesCleartextTraffic="true"
+                  android:theme="@style/Theme.AppCompat.NoActionBar">
+                  <activity
+                      android:name=".MainActivity"
+                      android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+                  <activity
+                      android:name=".PlayerActivity"
+                      android:exported="false"
+                      android:configChanges="orientation|screenSize|keyboardHidden"/>
+              </application>
+          </manifest>
+          EOF
+
+      - name: MainActivity.kt
+        run: |
+          cat > app/src/main/java/com/damientv241/app/MainActivity.kt << 'EOF'
+          package com.damientv241.app
+
+          import android.content.Intent
+          import android.graphics.Color
           import android.os.Bundle
+          import android.text.Editable
+          import android.text.TextWatcher
+          import android.view.Gravity
           import android.view.WindowManager
-          import io.flutter.embedding.android.FlutterActivity
+          import android.widget.*
+          import androidx.appcompat.app.AppCompatActivity
+          import androidx.recyclerview.widget.LinearLayoutManager
+          import androidx.recyclerview.widget.RecyclerView
+          import com.bumptech.glide.Glide
+          import kotlinx.coroutines.*
+          import okhttp3.OkHttpClient
+          import okhttp3.Request
+          import java.util.concurrent.TimeUnit
 
-          class MainActivity: FlutterActivity() {
+          data class Channel(val name: String, val logo: String, val group: String, val url: String)
+
+          class MainActivity : AppCompatActivity() {
+              private val BG = Color.parseColor("#0B0F1A")
+              private val CARD = Color.parseColor("#151B2B")
+              private val ACCENT = Color.parseColor("#E50914")
+              private val GOLD = Color.parseColor("#FBBF24")
+              private val TEXT = Color.WHITE
+              private val MUTED = Color.parseColor("#8B96B8")
+
+              private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+              private var allChannels = listOf<Channel>()
+              private val channels = mutableListOf<Channel>()
+              private var adapter: ChannelAdapter? = null
+
+              private val presets = listOf(
+                  "France" to "https://iptv-org.github.io/iptv/countries/fr.m3u",
+                  "Belgique" to "https://iptv-org.github.io/iptv/countries/be.m3u",
+                  "Free-TV" to "https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8",
+                  "Monde" to "https://iptv-org.github.io/iptv/index.m3u",
+                  "TVradioZap" to "https://tvradiozap.eu/live/x/vlc/d/tvzeu.m3u"
+              )
+
               override fun onCreate(savedInstanceState: Bundle?) {
                   super.onCreate(savedInstanceState)
                   window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                  window.statusBarColor = BG
+
+                  val root = LinearLayout(this).apply {
+                      orientation = LinearLayout.VERTICAL
+                      setBackgroundColor(BG)
+                  }
+
+                  // HEADER
+                  val header = LinearLayout(this).apply {
+                      orientation = LinearLayout.HORIZONTAL
+                      setPadding(24, 40, 24, 16)
+                      gravity = Gravity.CENTER_VERTICAL
+                  }
+                  val logo = TextView(this).apply {
+                      text = "D"
+                      setTextColor(TEXT)
+                      textSize = 20f
+                      gravity = Gravity.CENTER
+                      setBackgroundColor(ACCENT)
+                      width = 90; height = 90
+                  }
+                  val titleCol = LinearLayout(this).apply {
+                      orientation = LinearLayout.VERTICAL
+                      setPadding(20, 0, 0, 0)
+                  }
+                  val title = TextView(this).apply {
+                      text = "Damien TV 241 🇬🇦"
+                      setTextColor(TEXT)
+                      textSize = 18f
+                  }
+                  val subtitle = TextView(this).apply {
+                      text = "PROTOTYPE NEYLA 241"
+                      setTextColor(GOLD)
+                      textSize = 10f
+                  }
+                  titleCol.addView(title); titleCol.addView(subtitle)
+                  header.addView(logo); header.addView(titleCol)
+                  root.addView(header)
+
+                  // PRESETS
+                  val presetScroll = HorizontalScrollView(this)
+                  val presetRow = LinearLayout(this).apply {
+                      orientation = LinearLayout.HORIZONTAL
+                      setPadding(16, 8, 16, 8)
+                  }
+                  presets.forEach { (name, url) ->
+                      val btn = TextView(this).apply {
+                          text = name
+                          setTextColor(TEXT)
+                          textSize = 13f
+                          setPadding(28, 18, 28, 18)
+                          setBackgroundColor(CARD)
+                          setOnClickListener { loadPlaylist(url) }
+                      }
+                      val lp = LinearLayout.LayoutParams(
+                          LinearLayout.LayoutParams.WRAP_CONTENT,
+                          LinearLayout.LayoutParams.WRAP_CONTENT)
+                      lp.marginEnd = 12
+                      presetRow.addView(btn, lp)
+                  }
+                  presetScroll.addView(presetRow)
+                  root.addView(presetScroll)
+
+                  // URL ROW
+                  val urlRow = LinearLayout(this).apply {
+                      orientation = LinearLayout.HORIZONTAL
+                      setPadding(16, 8, 16, 8)
+                      gravity = Gravity.CENTER_VERTICAL
+                  }
+                  val urlInput = EditText(this).apply {
+                      setText(presets[0].second)
+                      setTextColor(TEXT)
+                      setHintTextColor(MUTED)
+                      hint = "URL M3U"
+                      textSize = 13f
+                      setBackgroundColor(CARD)
+                      setPadding(20, 20, 20, 20)
+                  }
+                  val urlLp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                  val loadBtn = TextView(this).apply {
+                      text = "Charger"
+                      setTextColor(TEXT)
+                      textSize = 13f
+                      setBackgroundColor(ACCENT)
+                      setPadding(30, 24, 30, 24)
+                      setOnClickListener { loadPlaylist(urlInput.text.toString()) }
+                  }
+                  val btnLp = LinearLayout.LayoutParams(
+                      LinearLayout.LayoutParams.WRAP_CONTENT,
+                      LinearLayout.LayoutParams.WRAP_CONTENT)
+                  btnLp.marginStart = 10
+                  urlRow.addView(urlInput, urlLp)
+                  urlRow.addView(loadBtn, btnLp)
+                  root.addView(urlRow)
+
+                  // SEARCH
+                  val search = EditText(this).apply {
+                      setTextColor(TEXT)
+                      setHintTextColor(MUTED)
+                      hint = "🔍 Rechercher..."
+                      textSize = 13f
+                      setBackgroundColor(CARD)
+                      setPadding(20, 20, 20, 20)
+                  }
+                  val searchLp = LinearLayout.LayoutParams(
+                      LinearLayout.LayoutParams.MATCH_PARENT,
+                      LinearLayout.LayoutParams.WRAP_CONTENT)
+                  searchLp.setMargins(16, 8, 16, 8)
+                  search.addTextChangedListener(object : TextWatcher {
+                      override fun afterTextChanged(s: Editable?) { filter(s.toString()) }
+                      override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+                      override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+                  })
+                  root.addView(search, searchLp)
+
+                  // LISTE
+                  val rv = RecyclerView(this).apply {
+                      layoutManager = LinearLayoutManager(this@MainActivity)
+                  }
+                  adapter = ChannelAdapter(channels) { ch ->
+                      val intent = Intent(this@MainActivity, PlayerActivity::class.java)
+                      intent.putExtra("url", ch.url)
+                      intent.putExtra("title", ch.name)
+                      startActivity(intent)
+                  }
+                  rv.adapter = adapter
+                  root.addView(rv, LinearLayout.LayoutParams(
+                      LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+
+                  // CREDIT
+                  val credit = TextView(this).apply {
+                      text = "🇬🇦 Conçu par Damien (Starly Koumba) 🇬🇦"
+                      setTextColor(MUTED)
+                      textSize = 11f
+                      gravity = Gravity.CENTER
+                      setPadding(0, 16, 0, 16)
+                  }
+                  root.addView(credit)
+
+                  setContentView(root)
+                  loadPlaylist(presets[0].second)
+              }
+
+              private fun loadPlaylist(url: String) {
+                  scope.launch {
+                      Toast.makeText(this@MainActivity, "Chargement...", Toast.LENGTH_SHORT).show()
+                      try {
+                          val ch = withContext(Dispatchers.IO) { fetchM3U(url) }
+                          allChannels = ch
+                          filter("")
+                          Toast.makeText(this@MainActivity, "${ch.size} chaînes", Toast.LENGTH_SHORT).show()
+                      } catch (e: Exception) {
+                          Toast.makeText(this@MainActivity, "Erreur: ${e.message}", Toast.LENGTH_LONG).show()
+                      }
+                  }
+              }
+
+              private fun filter(query: String) {
+                  channels.clear()
+                  channels.addAll(
+                      if (query.isEmpty()) allChannels
+                      else allChannels.filter {
+                          it.name.contains(query, true) || it.group.contains(query, true)
+                      })
+                  adapter?.notifyDataSetChanged()
+              }
+
+              private fun fetchM3U(url: String): List<Channel> {
+                  val client = OkHttpClient.Builder()
+                      .connectTimeout(30, TimeUnit.SECONDS)
+                      .readTimeout(30, TimeUnit.SECONDS)
+                      .build()
+                  val req = Request.Builder().url(url).build()
+                  val body = client.newCall(req).execute().body?.string() ?: return emptyList()
+                  val list = mutableListOf<Channel>()
+                  var name: String? = null
+                  var logo = ""
+                  var group = "Général"
+                  body.lines().forEach { line ->
+                      val l = line.trim()
+                      if (l.startsWith("#EXTINF:")) {
+                          val info = l.substring(8)
+                          logo = Regex("tvg-logo=\"([^\"]*)\"").find(info)?.groupValues?.get(1) ?: ""
+                          group = Regex("group-title=\"([^\"]*)\"").find(info)?.groupValues?.get(1) ?: "Général"
+                          name = info.split(",").lastOrNull()?.trim()
+                      } else if (l.isNotEmpty() && !l.startsWith("#") && name != null) {
+                          list.add(Channel(name!!, logo, group, l))
+                          name = null
+                      }
+                  }
+                  return list
+              }
+
+              override fun onDestroy() {
+                  super.onDestroy()
+                  scope.cancel()
               }
           }
-          KTEOF
-      - name: Compiler
-        working-directory: damien_tv_241
-        run: flutter build apk --release
+
+          class ChannelAdapter(
+              private val items: List<Channel>,
+              private val onClick: (Channel) -> Unit
+          ) : RecyclerView.Adapter<ChannelAdapter.VH>() {
+              class VH(v: android.view.View) : RecyclerView.ViewHolder(v)
+
+              override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): VH {
+                  val ctx = parent.context
+                  val row = LinearLayout(ctx).apply {
+                      orientation = LinearLayout.HORIZONTAL
+                      setPadding(24, 20, 24, 20)
+                      layoutParams = RecyclerView.LayoutParams(
+                          RecyclerView.LayoutParams.MATCH_PARENT,
+                          RecyclerView.LayoutParams.WRAP_CONTENT)
+                      isClickable = true
+                      setBackgroundColor(Color.parseColor("#0B0F1A"))
+                  }
+                  val logo = ImageView(ctx).apply {
+                      layoutParams = LinearLayout.LayoutParams(80, 80)
+                  }
+                  val name = TextView(ctx).apply {
+                      setTextColor(Color.WHITE)
+                      textSize = 15f
+                      setPadding(24, 0, 0, 0)
+                      layoutParams = LinearLayout.LayoutParams(0,
+                          LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                  }
+                  row.addView(logo)
+                  row.addView(name)
+                  return VH(row)
+              }
+
+              override fun onBindViewHolder(holder: VH, position: Int) {
+                  val ch = items[position]
+                  val row = holder.itemView as LinearLayout
+                  val logo = row.getChildAt(0) as ImageView
+                  val name = row.getChildAt(1) as TextView
+                  name.text = ch.name
+                  if (ch.logo.isNotEmpty()) {
+                      Glide.with(logo).load(ch.logo).into(logo)
+                  } else {
+                      logo.setImageResource(android.R.drawable.ic_menu_view)
+                  }
+                  row.setOnClickListener { onClick(ch) }
+              }
+
+              override fun getItemCount() = items.size
+          }
+          EOF
+
+      - name: PlayerActivity.kt
+        run: |
+          cat > app/src/main/java/com/damientv241/app/PlayerActivity.kt << 'EOF'
+          package com.damientv241.app
+
+          import android.graphics.Color
+          import android.os.Bundle
+          import android.view.WindowManager
+          import android.widget.FrameLayout
+          import android.widget.TextView
+          import androidx.appcompat.app.AppCompatActivity
+          import androidx.media3.common.MediaItem
+          import androidx.media3.exoplayer.ExoPlayer
+          import androidx.media3.exoplayer.hls.HlsMediaSource
+          import androidx.media3.datasource.DefaultHttpDataSource
+          import androidx.media3.datasource.okhttp.OkHttpDataSource
+          import androidx.media3.ui.PlayerView
+          import okhttp3.OkHttpClient
+
+          class PlayerActivity : AppCompatActivity() {
+              private var player: ExoPlayer? = null
+
+              override fun onCreate(savedInstanceState: Bundle?) {
+                  super.onCreate(savedInstanceState)
+                  window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                  window.statusBarColor = Color.BLACK
+
+                  val url = intent.getStringExtra("url") ?: return
+                  val title = intent.getStringExtra("title") ?: "Lecture"
+
+                  val root = FrameLayout(this).apply { setBackgroundColor(Color.BLACK) }
+
+                  val playerView = PlayerView(this).apply {
+                      layoutParams = FrameLayout.LayoutParams(-1, -1)
+                      setUseController(true)
+                  }
+                  root.addView(playerView)
+
+                  val titleView = TextView(this).apply {
+                      text = title
+                      setTextColor(Color.WHITE)
+                      textSize = 14f
+                      setPadding(30, 60, 30, 30)
+                  }
+                  root.addView(titleView)
+
+                  setContentView(root)
+
+                  val httpClient = OkHttpClient.Builder().build()
+                  val httpFactory = OkHttpDataSource.Factory(httpClient)
+                      .setUserAgent("VLC/3.0.20 LibVLC/3.0.20")
+                      .setDefaultRequestProperties(mapOf("Referer" to url))
+
+                  player = ExoPlayer.Builder(this)
+                      .setMediaSourceFactory(
+                          androidx.media3.exoplayer.source.DefaultMediaSourceFactory(httpFactory))
+                      .build()
+
+                  playerView.player = player
+
+                  val item = MediaItem.fromUri(url)
+                  player!!.setMediaItem(item)
+                  player!!.prepare()
+                  player!!.playWhenReady = true
+              }
+
+              override fun onPause() {
+                  super.onPause()
+                  player?.pause()
+              }
+
+              override fun onDestroy() {
+                  super.onDestroy()
+                  player?.release()
+                  player = null
+              }
+          }
+          EOF
+
+      - name: Compiler l'APK
+        run: gradle assembleRelease --no-daemon
+
+      - name: Renommer APK
+        run: |
+          mkdir -p output
+          cp app/build/outputs/apk/release/app-release.apk output/damien-tv-241.apk
+
       - name: Envoyer
         uses: actions/upload-artifact@v4
         with:
           name: damien-tv-241-apk
-          path: damien_tv_241/build/app/outputs/flutter-apk/app-release.apk
+          path: output/damien-tv-241.apk
