@@ -25,6 +25,15 @@ jobs:
       - name: Ajouter les dépendances
         working-directory: damien_tv_241
         run: flutter pub add video_player http shared_preferences cached_network_image wakelock_plus url_launcher google_mobile_ads
+      - name: Forcer versions compatibles
+        working-directory: damien_tv_241
+        run: |
+          cat >> pubspec.yaml << 'EOF'
+
+          dependency_overrides:
+            package_info_plus: 8.1.1
+          EOF
+          flutter pub get
       - name: Remplacer AndroidManifest
         working-directory: damien_tv_241
         run: |
@@ -77,4 +86,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: damien-tv-241-apk
-          path: damien_tv_241/build/app/outputs/flutter-apk/app-release.apk               
+          path: damien_tv_241/build/app/outputs/flutter-apk/app-release.apk                   
