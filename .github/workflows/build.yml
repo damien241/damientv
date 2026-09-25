@@ -14,7 +14,6 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-      - uses: android-actions/setup-android@v3
 
       - name: Créer la structure du projet
         run: |
@@ -167,7 +166,6 @@ jobs:
                       setBackgroundColor(BG)
                   }
 
-                  // HEADER
                   val header = LinearLayout(this).apply {
                       orientation = LinearLayout.HORIZONTAL
                       setPadding(24, 40, 24, 16)
@@ -186,7 +184,7 @@ jobs:
                       setPadding(20, 0, 0, 0)
                   }
                   val title = TextView(this).apply {
-                      text = "Damien TV 241 🇬🇦"
+                      text = "Damien TV 241"
                       setTextColor(TEXT)
                       textSize = 18f
                   }
@@ -199,7 +197,6 @@ jobs:
                   header.addView(logo); header.addView(titleCol)
                   root.addView(header)
 
-                  // PRESETS
                   val presetScroll = HorizontalScrollView(this)
                   val presetRow = LinearLayout(this).apply {
                       orientation = LinearLayout.HORIZONTAL
@@ -223,7 +220,6 @@ jobs:
                   presetScroll.addView(presetRow)
                   root.addView(presetScroll)
 
-                  // URL ROW
                   val urlRow = LinearLayout(this).apply {
                       orientation = LinearLayout.HORIZONTAL
                       setPadding(16, 8, 16, 8)
@@ -255,11 +251,10 @@ jobs:
                   urlRow.addView(loadBtn, btnLp)
                   root.addView(urlRow)
 
-                  // SEARCH
                   val search = EditText(this).apply {
                       setTextColor(TEXT)
                       setHintTextColor(MUTED)
-                      hint = "🔍 Rechercher..."
+                      hint = "Rechercher..."
                       textSize = 13f
                       setBackgroundColor(CARD)
                       setPadding(20, 20, 20, 20)
@@ -275,7 +270,6 @@ jobs:
                   })
                   root.addView(search, searchLp)
 
-                  // LISTE
                   val rv = RecyclerView(this).apply {
                       layoutManager = LinearLayoutManager(this@MainActivity)
                   }
@@ -289,9 +283,8 @@ jobs:
                   root.addView(rv, LinearLayout.LayoutParams(
                       LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
 
-                  // CREDIT
                   val credit = TextView(this).apply {
-                      text = "🇬🇦 Conçu par Damien (Starly Koumba) 🇬🇦"
+                      text = "Concu par Damien (Starly Koumba)"
                       setTextColor(MUTED)
                       textSize = 11f
                       gravity = Gravity.CENTER
@@ -310,7 +303,7 @@ jobs:
                           val ch = withContext(Dispatchers.IO) { fetchM3U(url) }
                           allChannels = ch
                           filter("")
-                          Toast.makeText(this@MainActivity, "${ch.size} chaînes", Toast.LENGTH_SHORT).show()
+                          Toast.makeText(this@MainActivity, "${ch.size} chaines", Toast.LENGTH_SHORT).show()
                       } catch (e: Exception) {
                           Toast.makeText(this@MainActivity, "Erreur: ${e.message}", Toast.LENGTH_LONG).show()
                       }
@@ -337,13 +330,13 @@ jobs:
                   val list = mutableListOf<Channel>()
                   var name: String? = null
                   var logo = ""
-                  var group = "Général"
+                  var group = "General"
                   body.lines().forEach { line ->
                       val l = line.trim()
                       if (l.startsWith("#EXTINF:")) {
                           val info = l.substring(8)
                           logo = Regex("tvg-logo=\"([^\"]*)\"").find(info)?.groupValues?.get(1) ?: ""
-                          group = Regex("group-title=\"([^\"]*)\"").find(info)?.groupValues?.get(1) ?: "Général"
+                          group = Regex("group-title=\"([^\"]*)\"").find(info)?.groupValues?.get(1) ?: "General"
                           name = info.split(",").lastOrNull()?.trim()
                       } else if (l.isNotEmpty() && !l.startsWith("#") && name != null) {
                           list.add(Channel(name!!, logo, group, l))
@@ -422,8 +415,7 @@ jobs:
           import androidx.appcompat.app.AppCompatActivity
           import androidx.media3.common.MediaItem
           import androidx.media3.exoplayer.ExoPlayer
-          import androidx.media3.exoplayer.hls.HlsMediaSource
-          import androidx.media3.datasource.DefaultHttpDataSource
+          import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
           import androidx.media3.datasource.okhttp.OkHttpDataSource
           import androidx.media3.ui.PlayerView
           import okhttp3.OkHttpClient
@@ -460,11 +452,9 @@ jobs:
                   val httpClient = OkHttpClient.Builder().build()
                   val httpFactory = OkHttpDataSource.Factory(httpClient)
                       .setUserAgent("VLC/3.0.20 LibVLC/3.0.20")
-                      .setDefaultRequestProperties(mapOf("Referer" to url))
 
                   player = ExoPlayer.Builder(this)
-                      .setMediaSourceFactory(
-                          androidx.media3.exoplayer.source.DefaultMediaSourceFactory(httpFactory))
+                      .setMediaSourceFactory(DefaultMediaSourceFactory(httpFactory))
                       .build()
 
                   playerView.player = player
