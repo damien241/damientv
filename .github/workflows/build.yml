@@ -20,51 +20,20 @@ jobs:
           channel: 'stable'
       - name: Créer le projet Flutter
         run: flutter create --org com.damientv241 --project-name damien_tv_241 damien_tv_241
-      - name: Copier le code de l'app
+      - name: Copier le code
         run: cp app.dart damien_tv_241/lib/main.dart
-      - name: Ajouter les dépendances
+      - name: Dépendances
         working-directory: damien_tv_241
-        run: flutter pub add video_player http shared_preferences cached_network_image wakelock_plus url_launcher
-      - name: Remplacer AndroidManifest
+        run: flutter pub add video_player http
+      - name: Autoriser internet
         working-directory: damien_tv_241
         run: |
-          cat > android/app/src/main/AndroidManifest.xml << 'XMLEOF'
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-              <uses-permission android:name="android.permission.INTERNET"/>
-              <uses-permission android:name="android.permission.WAKE_LOCK"/>
-              <application
-                  android:label="Damien TV 241"
-                  android:name="${applicationName}"
-                  android:icon="@mipmap/ic_launcher"
-                  android:usesCleartextTraffic="true">
-                  <activity
-                      android:name=".MainActivity"
-                      android:exported="true"
-                      android:launchMode="singleTop"
-                      android:taskAffinity=""
-                      android:theme="@style/LaunchTheme"
-                      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-                      android:hardwareAccelerated="true"
-                      android:windowSoftInputMode="adjustResize">
-                      <meta-data
-                        android:name="io.flutter.embedding.android.NormalTheme"
-                        android:resource="@style/NormalTheme"
-                        />
-                      <intent-filter>
-                          <action android:name="android.intent.action.MAIN"/>
-                          <category android:name="android.intent.category.LAUNCHER"/>
-                      </intent-filter>
-                  </activity>
-                  <meta-data
-                      android:name="flutterEmbedding"
-                      android:value="2" />
-              </application>
-          </manifest>
-          XMLEOF
-      - name: Compiler l'APK
+          sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <application|' android/app/src/main/AndroidManifest.xml
+          sed -i 's|android:label="damien_tv_241"|android:label="Damien TV 241" android:usesCleartextTraffic="true"|' android/app/src/main/AndroidManifest.xml
+      - name: Compiler
         working-directory: damien_tv_241
         run: flutter build apk --release
-      - name: Envoyer l'APK
+      - name: Envoyer
         uses: actions/upload-artifact@v4
         with:
           name: damien-tv-241-apk
