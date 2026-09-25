@@ -16,7 +16,7 @@ jobs:
           java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.0'
+          flutter-version: '3.24.0'
           channel: 'stable'
       - name: Créer le projet Flutter
         run: flutter create --org com.damientv241 --project-name damien_tv_241 damien_tv_241
@@ -25,50 +25,6 @@ jobs:
       - name: Ajouter les dépendances
         working-directory: damien_tv_241
         run: flutter pub add video_player http shared_preferences cached_network_image wakelock_plus url_launcher google_mobile_ads
-      - name: Corriger Kotlin et Gradle
-        working-directory: damien_tv_241
-        run: |
-          cat > android/build.gradle << 'EOF'
-          allprojects {
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-          }
-          rootProject.buildDir = "../build"
-          subprojects {
-              project.buildDir = "${rootProject.buildDir}/${project.name}"
-          }
-          subprojects {
-              project.evaluationDependsOn(":app")
-          }
-          tasks.register("clean", Delete) {
-              delete rootProject.buildDir
-          }
-          EOF
-          cat > android/settings.gradle << 'EOF'
-          pluginManagement {
-              def flutterSdkPath = {
-                  def properties = new Properties()
-                  file("local.properties").withInputStream { properties.load(it) }
-                  def flutterSdkPath = properties.getProperty("flutter.sdk")
-                  assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
-                  return flutterSdkPath
-              }()
-              includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
-              repositories {
-                  google()
-                  mavenCentral()
-                  gradlePluginPortal()
-              }
-          }
-          plugins {
-              id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-              id "com.android.application" version "8.1.0" apply false
-              id "org.jetbrains.kotlin.android" version "2.0.0" apply false
-          }
-          include ":app"
-          EOF
       - name: Remplacer AndroidManifest
         working-directory: damien_tv_241
         run: |
@@ -121,4 +77,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: damien-tv-241-apk
-          path: damien_tv_241/build/app/outputs/flutter-apk/app-release.apk
+          path: damien_tv_241/build/app/outputs/flutter-apk/app-release.apk  
