@@ -24,16 +24,7 @@ jobs:
         run: cp app.dart damien_tv_241/lib/main.dart
       - name: Ajouter les dépendances
         working-directory: damien_tv_241
-        run: flutter pub add video_player http shared_preferences cached_network_image wakelock_plus url_launcher google_mobile_ads
-      - name: Forcer versions compatibles
-        working-directory: damien_tv_241
-        run: |
-          cat >> pubspec.yaml << 'EOF'
-
-          dependency_overrides:
-            package_info_plus: 8.1.1
-          EOF
-          flutter pub get
+        run: flutter pub add video_player http shared_preferences cached_network_image wakelock_plus url_launcher
       - name: Remplacer AndroidManifest
         working-directory: damien_tv_241
         run: |
@@ -52,9 +43,6 @@ jobs:
                   android:name="${applicationName}"
                   android:icon="@mipmap/ic_launcher"
                   android:usesCleartextTraffic="true">
-                  <meta-data
-                      android:name="com.google.android.gms.ads.APPLICATION_ID"
-                      android:value="ca-app-pub-3940256099942544~3347511713"/>
                   <activity
                       android:name=".MainActivity"
                       android:exported="true"
