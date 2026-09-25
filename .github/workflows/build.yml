@@ -22,17 +22,28 @@ jobs:
         run: flutter create --org com.damientv241 --project-name damien_tv_241 damien_tv_241
       - name: Copier le code
         run: cp app.dart damien_tv_241/lib/main.dart
-      - name: Dépendances + version compatible
+      - name: Dépendances (2 seulement)
         working-directory: damien_tv_241
-        run: |
-          flutter pub add video_player http wakelock_plus
-          printf '\ndependency_overrides:\n  package_info_plus: 8.1.1\n' >> pubspec.yaml
-          flutter pub get
-      - name: Autoriser internet
+        run: flutter pub add video_player http
+      - name: Autoriser internet + écran toujours allumé
         working-directory: damien_tv_241
         run: |
           sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.WAKE_LOCK"/>\n    <application|' android/app/src/main/AndroidManifest.xml
           sed -i 's|android:label="damien_tv_241"|android:label="Damien TV 241" android:usesCleartextTraffic="true"|' android/app/src/main/AndroidManifest.xml
+          cat > android/app/src/main/kotlin/com/damientv241/damien_tv_241/MainActivity.kt << 'KTEOF'
+          package com.damientv241.damien_tv_241
+
+          import android.os.Bundle
+          import android.view.WindowManager
+          import io.flutter.embedding.android.FlutterActivity
+
+          class MainActivity: FlutterActivity() {
+              override fun onCreate(savedInstanceState: Bundle?) {
+                  super.onCreate(savedInstanceState)
+                  window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+              }
+          }
+          KTEOF
       - name: Compiler
         working-directory: damien_tv_241
         run: flutter build apk --release
