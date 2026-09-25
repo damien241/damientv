@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await WakelockPlus.enable();
-  runApp(const App());
-}
+void main() => runApp(const App());
 
 class C {
   static const bg = Color(0xFF0B0F1A);
@@ -19,30 +14,28 @@ class C {
   static const blue = Color(0xFF3A75C4);
 }
 
-class PlaylistPreset {
+class Preset {
   final String name, url;
   final IconData icon;
   final Color color;
-  const PlaylistPreset({
-    required this.name, required this.url,
-    required this.icon, required this.color,
-  });
+  const Preset({required this.name, required this.url,
+    required this.icon, required this.color});
 }
 
 const kPresets = [
-  PlaylistPreset(name: 'France',
+  Preset(name: 'France',
     url: 'https://iptv-org.github.io/iptv/countries/fr.m3u',
     icon: Icons.flag, color: C.blue),
-  PlaylistPreset(name: 'Belgique',
+  Preset(name: 'Belgique',
     url: 'https://iptv-org.github.io/iptv/countries/be.m3u',
     icon: Icons.flag_circle, color: C.gold),
-  PlaylistPreset(name: 'Free-TV',
+  Preset(name: 'Free-TV',
     url: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8',
     icon: Icons.public, color: C.green),
-  PlaylistPreset(name: 'Monde',
+  Preset(name: 'Monde',
     url: 'https://iptv-org.github.io/iptv/index.m3u',
     icon: Icons.language, color: C.accent),
-  PlaylistPreset(name: 'TVradioZap',
+  Preset(name: 'TVradioZap',
     url: 'https://tvradiozap.eu/live/x/vlc/d/tvzeu.m3u',
     icon: Icons.live_tv, color: C.muted),
 ];
@@ -172,7 +165,6 @@ class _HomeState extends State<Home> {
     backgroundColor: C.bg,
     body: SafeArea(child: Column(children: [
       _header(),
-      // Presets
       SizedBox(height: 44,
         child: ListView.builder(scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -195,7 +187,6 @@ class _HomeState extends State<Home> {
                       fontSize: 11, fontWeight: FontWeight.w600)),
                   ])));
           })),
-      // URL field
       Padding(padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
         child: Row(children: [
           Expanded(child: TextField(controller: _ctrl,
@@ -207,7 +198,6 @@ class _HomeState extends State<Home> {
               backgroundColor: C.accent, foregroundColor: Colors.white),
             child: const Text('Charger', style: TextStyle(fontSize: 12))),
         ])),
-      // Search
       Padding(padding: const EdgeInsets.fromLTRB(8, 0, 8, 6),
         child: TextField(controller: _searchCtrl,
           style: const TextStyle(color: Colors.white, fontSize: 12),
@@ -218,7 +208,6 @@ class _HomeState extends State<Home> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: Color(0xFF232B42)))))),
-      // Categories
       if (_all.isNotEmpty) SizedBox(height: 36,
         child: ListView.builder(scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -238,7 +227,6 @@ class _HomeState extends State<Home> {
                       fontSize: 11, fontWeight: FontWeight.w600))))));
           })),
       const SizedBox(height: 6),
-      // List
       Expanded(child: _loading
         ? const Center(child: CircularProgressIndicator(color: C.accent))
         : _error != null ? _err()
@@ -348,7 +336,6 @@ class _PlayerState extends State<Player> {
   @override
   void initState() {
     super.initState();
-    WakelockPlus.enable();
     _start();
   }
 
