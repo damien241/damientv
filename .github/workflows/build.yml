@@ -22,9 +22,12 @@ jobs:
         run: flutter create --org com.damientv241 --project-name damien_tv_241 damien_tv_241
       - name: Copier le code
         run: cp app.dart damien_tv_241/lib/main.dart
-      - name: Dépendances
+      - name: Dépendances + version compatible
         working-directory: damien_tv_241
-        run: flutter pub add video_player http wakelock_plus
+        run: |
+          flutter pub add video_player http wakelock_plus
+          printf '\ndependency_overrides:\n  package_info_plus: 8.1.1\n' >> pubspec.yaml
+          flutter pub get
       - name: Autoriser internet
         working-directory: damien_tv_241
         run: |
